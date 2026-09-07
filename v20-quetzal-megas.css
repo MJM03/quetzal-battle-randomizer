@@ -1,0 +1,6 @@
+/* V20 — small UI cues for Quetzal dex + strict Mega forms */
+.pokemon-card.mega-card-real{border-color:#d35cff88;box-shadow:inset 0 0 18px #9f4cff13}
+.poke-badge.mega{background:linear-gradient(135deg,#8f39ff,#ff4fc8)}
+.poke-badge.legendary{background:linear-gradient(135deg,#7a5200,#f2bd36);color:#fff9d8}
+.dex::before,.dex-badge::before{content:'Q ';opacity:.62;font-size:.72em;font-weight:800}
+.team-sprite[data-v20-mega="1"]{filter:drop-shadow(0 0 9px #ca68ff88)}
