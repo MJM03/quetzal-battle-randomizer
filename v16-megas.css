@@ -1,0 +1,6 @@
+/* V16 — Mega Evolution UI */
+.mega-tag{display:inline-flex;align-items:center;margin-left:7px;padding:2px 6px;border-radius:999px;font-size:.52rem;letter-spacing:.08em;font-weight:1000;color:#fff7d6;background:linear-gradient(135deg,#9f4cff,#ff4fd8);box-shadow:0 0 12px #ca5cff66;vertical-align:middle}
+.mega-wheel-badge{position:absolute;top:1px;right:0;padding:2px 5px;border-radius:999px;font-size:.47rem;font-weight:1000;letter-spacing:.07em;color:#fff;background:linear-gradient(135deg,#8e3dff,#ff4ebc);border:1px solid #ffd9ff99;box-shadow:0 0 10px #d74cff88;z-index:6}
+.switches label:has(#megas){border-color:#b05dff55;background:linear-gradient(180deg,#3b125122,#11182700)}
+.switches label:has(#megas)::after{content:'máx. 1 por equipo';margin-left:auto;color:#bfa7d9;font-size:.62rem;white-space:nowrap}
+@media(max-width:520px){.switches label:has(#megas)::after{display:none}.mega-tag{font-size:.48rem;padding:2px 5px;margin-left:5px}}
