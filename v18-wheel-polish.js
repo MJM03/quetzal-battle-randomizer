@@ -31,11 +31,9 @@
     });
   };
 
-  /* Repair the wheel currently visible after loading this patch. */
   const visibleIds=[...teamSpriteLayer.querySelectorAll('.dex-badge')].map(x=>Number(String(x.textContent).replace(/\D/g,''))).filter(Boolean);
   if(visibleIds.length)window.renderTeamWheelPreview(visibleIds,true);
 
-  /* Keep the VS wheel perfectly front-facing before/after spins. */
   const vsBtn=document.getElementById('versusBtn');
   const wheel=document.getElementById('rouletteWheel');
   if(wheel){
@@ -48,4 +46,9 @@
     window.addEventListener('resize',normalize,{passive:true});
     if(vsBtn)vsBtn.addEventListener('click',()=>{normalize();setTimeout(normalize,3600)},true);
   }
+
+  /* V19 loader: authoritative Mega forms. */
+  const css=document.createElement('link');css.rel='stylesheet';css.href='./v19-mega-forms.css?v=19';document.head.appendChild(css);
+  const js=document.createElement('script');js.src='./v19-mega-forms.js?v=19';js.defer=true;document.body.appendChild(js);
+  const pill=document.querySelector('.version-pill');if(pill)pill.textContent='V19 MEGA FORM FIX';
 })();
