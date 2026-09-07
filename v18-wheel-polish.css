@@ -1,0 +1,108 @@
+/* V18 — upright VS wheel + legendary/rarity visibility polish */
+
+/* VS wheel: front-facing, round, more like the team wheel without copying it. */
+.versus-panel .vs-stage{display:block!important}
+.versus-panel .vs-machine{
+  width:min(390px,90vw)!important;
+  aspect-ratio:1/1!important;
+  height:auto!important;
+  margin:22px auto 34px!important;
+  position:relative!important;
+  display:grid!important;
+  place-items:center!important;
+  perspective:none!important;
+  filter:drop-shadow(0 24px 30px #000a) drop-shadow(0 0 24px #1de6ff24)!important;
+}
+.versus-panel .vs-machine::before{
+  content:"";
+  position:absolute;
+  inset:1.8%;
+  border-radius:50%;
+  background:linear-gradient(145deg,#8fffff 0 5%,#16bfc8 7% 9%,#08262d 10% 12%,#f7d574 13% 16%,#8c6217 17% 20%,#101820 21% 100%);
+  box-shadow:0 0 0 2px #7fffff55,0 0 28px #24eaff55,0 18px 30px #000c,inset 0 2px 3px #fff9;
+  z-index:0;
+}
+.versus-panel .vs-machine::after{
+  content:"";
+  position:absolute;
+  width:82%;height:12%;left:9%;bottom:0;
+  border-radius:50%;
+  background:radial-gradient(ellipse,#10d7db44 0 35%,#04232c55 52%,transparent 72%);
+  border:1px solid #6cffff55;
+  transform:translateY(26%) scaleY(.45);
+  filter:blur(.2px);
+  z-index:-1;
+}
+.versus-panel .wheel-tilt{
+  position:absolute!important;
+  inset:11%!important;
+  transform:none!important;
+  transform-style:flat!important;
+  filter:none!important;
+  z-index:2!important;
+}
+.versus-panel .wheel-tilt::before{
+  inset:-7%!important;
+  border-radius:50%!important;
+  background:linear-gradient(145deg,#fbe18d,#a66f19 44%,#4a300b 53%,#d7a83b 73%,#241705 74%)!important;
+  transform:none!important;
+  box-shadow:0 0 0 2px #fff4,0 10px 20px #000b,inset 0 2px 3px #fff8!important;
+}
+.versus-panel .roulette-wheel{
+  inset:0!important;
+  width:100%!important;height:100%!important;
+  aspect-ratio:1/1!important;
+  border-radius:50%!important;
+  border:5px solid #211706!important;
+  box-shadow:inset 0 0 0 4px #f5d36d,inset 0 0 0 8px #6e4d13,inset 0 0 30px #000a,0 0 0 2px #57efff44!important;
+}
+.versus-panel .roulette-wheel::before{
+  background:repeating-conic-gradient(from -90deg,transparent 0 118deg,#f8f2d9bb 118deg 120deg),radial-gradient(circle at 38% 22%,#fff4 0,transparent 27%),radial-gradient(circle,transparent 0 42%,#0005 81%)!important;
+}
+.versus-panel .spin-button{
+  width:32%!important;
+  aspect-ratio:1/1!important;
+  border-radius:50%!important;
+  border:5px solid #e2b94b!important;
+  background:radial-gradient(circle at 36% 28%,#24384b,#101a26 58%,#060a0f)!important;
+  box-shadow:0 0 0 4px #4b340d,0 0 0 7px #e5b941,0 10px 18px #000c,inset 0 2px 0 #fff3,0 0 20px #17ddeb33!important;
+}
+.versus-panel .vs-pointer{
+  top:0!important;
+  filter:drop-shadow(0 7px 5px #000a) drop-shadow(0 0 10px #fff2)!important;
+}
+.versus-panel .wheel-marker{
+  font-size:.77rem!important;
+  line-height:1.18!important;
+  text-shadow:0 2px 5px #000,0 0 8px #000b!important;
+}
+
+/* Rarity badges must stay visible around wheel slots. */
+.wheel-rarity-stack{
+  position:absolute!important;
+  left:50%!important;
+  top:-13px!important;
+  transform:translateX(-50%)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:2px!important;
+  z-index:20!important;
+  pointer-events:none!important;
+}
+.wheel-rarity-stack .poke-badge{
+  white-space:nowrap!important;
+  font-size:.39rem!important;
+  padding:2px 4px!important;
+  line-height:1.1!important;
+}
+.v10-slot{overflow:visible!important}
+.team-sprite-layer{overflow:visible!important}
+.poke-badge.legendary{background:linear-gradient(135deg,#b9790b,#ffd85d)!important;color:#241600!important;border:1px solid #fff0a7!important;box-shadow:0 0 10px #ffc83d66!important}
+
+@media(max-width:430px){
+  .versus-panel .vs-machine{width:min(356px,89vw)!important;margin-top:18px!important}
+  .versus-panel .wheel-marker{font-size:.69rem!important}
+  .wheel-rarity-stack{top:-10px!important}
+  .wheel-rarity-stack .poke-badge{font-size:.35rem!important;padding:2px 3px!important}
+}
