@@ -1,0 +1,1 @@
+V10 fixes loaded after V9. Key repairs: v9-fixes.css is now actually linked, player chips are constrained to panel width, battle card uses compact Pokemon trainer sprites, and team wheel always settles upright with six visual slots.
