@@ -8,12 +8,13 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="arena-v5-patch.css" />
+  <link rel="stylesheet" href="wheel-match-v6.css" />
 </head>
 <body>
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <header class="topbar">
     <div class="brand-wrap"><div class="brand-kicker">QUETZAL</div><h1>BATTLE RANDOMIZER</h1><p>Tu arena. Tus reglas. Batallas infinitas.</p></div>
-    <div class="top-actions"><span class="version-pill">V5 ARENA</span><button id="soundBtn" class="icon-btn" type="button" aria-pressed="true">🔊</button><button id="installBtn" class="ghost" hidden>Instalar</button></div>
+    <div class="top-actions"><span class="version-pill">V6 WHEEL MATCH</span><button id="soundBtn" class="icon-btn" type="button" aria-pressed="true">🔊</button><button id="installBtn" class="ghost" hidden>Instalar</button></div>
   </header>
   <main>
     <section class="arena-grid">
@@ -29,20 +30,55 @@
         <div class="switches"><label><input id="legendaries" type="checkbox"><span></span>Legendarios / míticos</label><label><input id="unique" type="checkbox" checked><span></span>Especies únicas</label><label><input id="perfectIv" type="checkbox" checked><span></span>IV 31</label></div>
         <button id="rollBtn" class="action-btn green">🎲 RANDOMIZAR EQUIPOS</button>
       </aside>
+
       <section class="panel forge-panel">
         <div class="panel-title"><span>◉</span><div><small>Generador dinámico</small><strong>RULETA DE EQUIPOS</strong></div></div>
-        <div class="forge-stage"><div class="forge-glow"></div><div class="forge-disc-wrap"><div id="teamWheel" class="team-wheel"><div class="team-wheel-face"><div class="team-wheel-ring"></div><div class="team-wheel-core">Q</div></div></div></div><div id="teamRouletteNames" class="team-roulette-names"></div><div id="teamRollStatus" class="forge-status">Listo para generar equipos.</div></div>
+        <div class="forge-stage">
+          <div class="wheel-title-ribbon" id="teamWheelCaption">LISTO PARA RANDOMIZAR</div>
+          <div class="forge-glow"></div>
+          <div class="team-machine">
+            <div class="team-top-pointer"></div>
+            <div class="team-disc-3d">
+              <div id="teamWheel" class="team-wheel">
+                <div class="team-wheel-face"></div>
+                <div id="teamSpriteLayer" class="team-sprite-layer" aria-hidden="true"></div>
+                <div class="team-wheel-glass"></div>
+              </div>
+              <div class="team-wheel-core" aria-hidden="true"><span></span></div>
+            </div>
+            <div class="machine-base"></div>
+          </div>
+          <div id="teamRouletteNames" class="team-roulette-names"></div>
+          <div id="teamRollStatus" class="forge-status">Listo para generar equipos.</div>
+        </div>
       </section>
+
       <section class="panel versus-panel">
-        <div class="panel-title"><span>⚔</span><div><small>Sorteo de enfrentamiento</small><strong>RULETA VS 3D</strong></div></div>
-        <div class="vs-stage"><div class="vs-machine"><div class="vs-pointer"></div><div class="wheel-tilt"><div id="rouletteWheel" class="roulette-wheel"><div class="wheel-inner"></div><div id="wheelMarkers" class="wheel-markers"></div></div></div><button id="versusBtn" class="spin-button" type="button">GIRAR<br><span>VS</span></button></div><div id="rouletteOptions" class="roulette-options"></div></div>
-        <div id="versusResult" class="versus-result" aria-live="polite"><div class="versus-placeholder">Gira la ruleta para revelar la combinación.</div></div><div id="confetti" class="confetti" aria-hidden="true"></div>
+        <div class="panel-title"><span>⚔</span><div><small>Sorteo de enfrentamiento</small><strong>RULETA DE ENFRENTAMIENTOS</strong></div></div>
+        <div class="vs-stage">
+          <div class="vs-machine">
+            <div class="vs-pointer"><span></span></div>
+            <div class="wheel-tilt">
+              <div id="rouletteWheel" class="roulette-wheel">
+                <div class="vs-wheel-glass"></div>
+                <div id="wheelMarkers" class="wheel-markers"></div>
+              </div>
+            </div>
+            <button id="versusBtn" class="spin-button" type="button"><span>GIRAR</span><small>VS</small></button>
+            <div class="vs-wheel-shadow"></div>
+          </div>
+          <div id="rouletteOptions" class="roulette-options"></div>
+        </div>
+        <div id="versusResult" class="versus-result" aria-live="polite"><div class="versus-placeholder">Gira la ruleta para revelar la combinación.</div></div>
+        <div id="confetti" class="confetti" aria-hidden="true"></div>
       </section>
     </section>
-    <section class="results-head"><div><small>Equipos sorteados</small><h2>ALINEACIONES</h2></div><div id="status" class="status">Pokédex lista para el sorteo.</div></section><section id="teams" class="teams"></section>
+
+    <section class="results-head"><div><small>Equipos sorteados</small><h2>ALINEACIONES</h2></div><div id="status" class="status">Pokédex lista para el sorteo.</div></section>
+    <section id="teams" class="teams"></section>
   </main>
   <template id="teamTemplate"><article class="team-card"><div class="team-head"><div class="player-orb"></div><h2></h2><button class="ghost reroll-team">↻ Equipo</button></div><div class="pokemon-grid"></div></article></template>
   <template id="pokemonTemplate"><div class="pokemon-card"><img alt="" loading="lazy"><div class="pokemon-info"><strong class="name"></strong><span class="meta"></span></div><button class="mini reroll-one" title="Cambiar Pokémon">↻</button></div></template>
-  <script src="app-v5.js"></script>
+  <script src="app-v6.js"></script>
 </body>
 </html>
