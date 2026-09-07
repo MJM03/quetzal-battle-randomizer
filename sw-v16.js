@@ -1,0 +1,5 @@
+const CACHE='qbr-v16-mega-toggle';
+const ASSETS=['./','./index.html','./styles.css','./arena-v5-patch.css','./wheel-match-v6.css','./player-flow-v7.css','./battle-card-v8.css','./v9-fixes.css','./v10-fixes.css','./v11-fixes.css','./v12-round-wheel.css','./v14-images.css','./v15-round-layout.css','./v16-megas.css','./app-v8.js','./v9-fixes.js','./v10-fixes.js','./v11-fixes.js','./v13-images.js','./v14-image-fallbacks.js','./v15-round-layout.js','./v16-megas.js','./manifest.webmanifest'];
+self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)))});
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;const u=new URL(e.request.url);if(u.origin!==self.location.origin){e.respondWith(fetch(e.request,{cache:'no-store'}));return;}e.respondWith(fetch(e.request).then(r=>{const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return r}).catch(()=>caches.match(e.request)))})
