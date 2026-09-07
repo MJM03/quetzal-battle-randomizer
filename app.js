@@ -2,8 +2,10 @@ const $ = s => document.querySelector(s);
 const teamsEl = $('#teams');
 const statusEl = $('#status');
 const namesEl = $('#playerNames');
+const versusEl = $('#versusResult');
 const SETTINGS_KEY='qbr-settings-v2';
 const NAMES_KEY='qbr-player-names-v1';
+const MATCHUP_KEY='qbr-versus-v1';
 const cfg = () => ({players:+$('#players').value, teamSize:+$('#teamSize').value, level:+$('#level').value, mode:$('#mode').value, legendaries:$('#legendaries').checked, unique:$('#unique').checked, perfectIv:$('#perfectIv').checked});
 
 const legendaryIds = new Set([144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386,480,481,482,483,484,485,486,487,488,489,490,491,492,493,494,638,639,640,641,642,643,644,645,646,647,648,649,716,717,718,719,720,721,772,773,785,786,787,788,789,790,791,792,800,801,802,807,808,809,888,889,890,891,892,893,894,895,896,897,898,905,1001,1002,1003,1004,1007,1008,1024,1025]);
@@ -11,6 +13,7 @@ const strong = new Set([6,9,65,68,94,130,131,143,149,169,181,196,197,208,212,214
 
 let pokemon = [];
 let currentTeams = [];
+let currentMatchup = JSON.parse(localStorage.getItem(MATCHUP_KEY) || 'null');
 let playerNames = JSON.parse(localStorage.getItem(NAMES_KEY) || '["Jugador 1","Jugador 2","Jugador 3","Jugador 4"]');
 while(playerNames.length<4) playerNames.push(`Jugador ${playerNames.length+1}`);
 
@@ -48,6 +51,7 @@ function renderPlayerInputs(){
       playerNames[i]=input.value.trimStart();
       saveNames();
       if(currentTeams.length) render();
+      renderVersus();
     });
     namesEl.appendChild(input);
   }
@@ -55,6 +59,39 @@ function renderPlayerInputs(){
 function displayName(i){
   const value=(playerNames[i]||'').trim();
   return value || `Jugador ${i+1}`;
+}
+
+function shuffle(values){
+  const a=[...values];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function randomizeVersus(){
+  const count=+$('#players').value;
+  const order=shuffle(Array.from({length:count},(_,i)=>i));
+  if(count===4){
+    currentMatchup={players:4,teamA:[order[0],order[1]],teamB:[order[2],order[3]]};
+  }else if(count===3){
+    currentMatchup={players:3,teamA:[order[0]],teamB:[order[1]],bye:order[2]};
+  }else{
+    currentMatchup={players:2,teamA:[order[0]],teamB:[order[1]]};
+  }
+  localStorage.setItem(MATCHUP_KEY,JSON.stringify(currentMatchup));
+  renderVersus();
+}
+function renderVersus(){
+  const count=+$('#players').value;
+  if(!currentMatchup || currentMatchup.players!==count){
+    versusEl.textContent='Pulsa “Randomizar VS”.';
+    return;
+  }
+  const names=ids=>ids.map(displayName).join(' + ');
+  const left=names(currentMatchup.teamA);
+  const right=names(currentMatchup.teamB);
+  versusEl.innerHTML=`<div class="side"><span class="side-label">Equipo A</span><strong>${left}</strong></div><div class="vs-badge">VS</div><div class="side"><span class="side-label">Equipo B</span><strong>${right}</strong></div>${currentMatchup.bye!==undefined?`<div class="bye">Descansa: <strong>${displayName(currentMatchup.bye)}</strong></div>`:''}`;
 }
 
 async function loadPokemon(){
@@ -135,10 +172,12 @@ function render(){
 }
 
 $('#rollBtn').addEventListener('click',()=>pokemon.length?generateAll():loadPokemon().then(generateAll));
-$('#players').addEventListener('change',()=>{renderPlayerInputs();saveSettings();if(currentTeams.length) currentTeams=currentTeams.slice(0,+$('#players').value),render();});
+$('#versusBtn').addEventListener('click',randomizeVersus);
+$('#players').addEventListener('change',()=>{renderPlayerInputs();saveSettings();if(currentTeams.length) currentTeams=currentTeams.slice(0,+$('#players').value),render();renderVersus();});
 ['teamSize','level','mode','legendaries','unique','perfectIv'].forEach(id=>$('#'+id).addEventListener('change',saveSettings));
 loadSettings();
 renderPlayerInputs();
+renderVersus();
 loadPokemon().catch(()=>{});
 
 let deferredPrompt;
