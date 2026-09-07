@@ -1,0 +1,3 @@
+/* V14 image reliability */
+.pokemon-card img.qbr14-missing,.team-sprite.qbr14-missing,.v10-pokemon.qbr14-missing,.fighter-pokemon.qbr14-missing,.featured-pokemon img.qbr14-missing,.trainer-avatar.qbr14-trainer-missing,.fighter-trainer.qbr14-trainer-missing,.v10-trainer.qbr14-trainer-missing,.v11-trainer.qbr14-trainer-missing{display:none!important}
+.pokemon-card:has(img.qbr14-missing)::before{content:'◉';display:grid;place-items:center;min-width:64px;color:#7eeaff;font-size:1.6rem;opacity:.7}
