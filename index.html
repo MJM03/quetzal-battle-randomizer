@@ -3,118 +3,94 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
+  <meta name="theme-color" content="#07111f" />
   <title>Quetzal Battle Randomizer</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="hero">
-    <div>
-      <p class="eyebrow">Pokémon Quetzal</p>
-      <h1>Battle Randomizer</h1>
-      <p class="subtitle">Genera equipos rápidos para 2–4 jugadores, sin repetir Pokémon y listos para crear en Quetzal.</p>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <div class="brand-kicker">QUETZAL</div>
+      <h1>BATTLE RANDOMIZER</h1>
+      <p>Tu arena. Tus reglas. Batallas infinitas.</p>
     </div>
-    <button id="installBtn" class="ghost" hidden>Instalar app</button>
+    <div class="top-actions">
+      <span class="version-pill">V5 ARENA</span>
+      <button id="soundBtn" class="icon-btn" type="button" aria-pressed="true">🔊</button>
+      <button id="installBtn" class="ghost" hidden>Instalar</button>
+    </div>
   </header>
 
   <main>
-    <section class="panel controls">
-      <div class="field">
-        <label for="players">Jugadores</label>
-        <select id="players">
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4" selected>4</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="teamSize">Pokémon por jugador</label>
-        <select id="teamSize"><option>3</option><option selected>6</option></select>
-      </div>
-      <div class="field">
-        <label for="level">Nivel</label>
-        <select id="level"><option>50</option><option selected>100</option></select>
-      </div>
-      <div class="field">
-        <label for="mode">Modo</label>
-        <select id="mode"><option value="balanced" selected>Balanceado</option><option value="chaos">Random total</option></select>
-      </div>
-
-      <div class="player-names-wrap">
-        <p class="section-label">Nombres de jugadores</p>
-        <div id="playerNames" class="player-names"></div>
-      </div>
-
-      <div class="checks">
-        <label><input id="legendaries" type="checkbox" /> Permitir legendarios/míticos</label>
-        <label><input id="unique" type="checkbox" checked /> Sin repetir especies</label>
-        <label><input id="perfectIv" type="checkbox" checked /> IV 31</label>
-      </div>
-      <button id="rollBtn" class="primary">🎲 Randomizar equipos</button>
-    </section>
-
-    <section class="versus panel">
-      <div class="versus-head">
-        <div>
-          <p class="section-label">Sorteo de enfrentamiento</p>
-          <h2>Ruleta VS</h2>
-          <p class="versus-copy">Cada color representa una combinación concreta. La ruleta se detiene en una opción y ese será el VS.</p>
+    <section class="arena-grid">
+      <aside class="panel control-panel">
+        <div class="panel-title"><span>⚙</span><div><small>Configuración rápida</small><strong>AJUSTES DE BATALLA</strong></div></div>
+        <div class="control-grid">
+          <label>Jugadores<select id="players"><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option></select></label>
+          <label>Pokémon por jugador<select id="teamSize"><option>3</option><option selected>6</option></select></label>
+          <label>Nivel<select id="level"><option>50</option><option selected>100</option></select></label>
+          <label>Modo<select id="mode"><option value="balanced" selected>Balanceado</option><option value="chaos">Random total</option></select></label>
         </div>
-        <button id="soundBtn" class="sound-toggle" type="button" aria-pressed="true" title="Activar o desactivar sonidos">🔊 <span>Sonido</span></button>
-      </div>
+        <div class="player-names-wrap">
+          <span class="micro-label">Nombres de jugadores</span>
+          <div id="playerNames" class="player-names"></div>
+        </div>
+        <div class="switches">
+          <label><input id="legendaries" type="checkbox"><span></span>Legendarios / míticos</label>
+          <label><input id="unique" type="checkbox" checked><span></span>Especies únicas</label>
+          <label><input id="perfectIv" type="checkbox" checked><span></span>IV 31</label>
+        </div>
+        <button id="rollBtn" class="action-btn green">🎲 RANDOMIZAR EQUIPOS</button>
+      </aside>
 
-      <div class="roulette-layout">
-        <div class="roulette-stage">
-          <div class="roulette-shell" aria-label="Ruleta de enfrentamientos">
-            <div class="roulette-pointer" aria-hidden="true"></div>
-            <div id="rouletteWheel" class="roulette-wheel">
-              <div class="wheel-rings" aria-hidden="true"></div>
-              <div id="wheelMarkers" class="wheel-markers" aria-hidden="true"></div>
+      <section class="panel forge-panel">
+        <div class="panel-title"><span>◉</span><div><small>Generador dinámico</small><strong>RULETA DE EQUIPOS</strong></div></div>
+        <div class="forge-stage">
+          <div class="forge-glow"></div>
+          <div class="forge-disc-wrap">
+            <div id="teamWheel" class="team-wheel">
+              <div class="team-wheel-face"><div class="team-wheel-ring"></div><div class="team-wheel-core">Q</div></div>
             </div>
-            <button id="versusBtn" class="spin-button" type="button">
-              <span class="spin-icon">↻</span>
-              <span>GIRAR</span>
-            </button>
           </div>
+          <div id="teamRouletteNames" class="team-roulette-names"></div>
+          <div id="teamRollStatus" class="forge-status">Listo para generar equipos.</div>
         </div>
+      </section>
 
-        <div class="roulette-explainer">
-          <div class="explainer-title">Opciones posibles</div>
+      <section class="panel versus-panel">
+        <div class="panel-title"><span>⚔</span><div><small>Sorteo de enfrentamiento</small><strong>RULETA VS 3D</strong></div></div>
+        <div class="vs-stage">
+          <div class="vs-machine">
+            <div class="vs-pointer"></div>
+            <div class="wheel-tilt">
+              <div id="rouletteWheel" class="roulette-wheel"><div class="wheel-inner"></div><div id="wheelMarkers" class="wheel-markers"></div></div>
+            </div>
+            <button id="versusBtn" class="spin-button" type="button">GIRAR<br><span>VS</span></button>
+          </div>
           <div id="rouletteOptions" class="roulette-options"></div>
-          <p class="explainer-note">El color no pertenece a un jugador: identifica una combinación de equipos.</p>
         </div>
-      </div>
-
-      <div id="versusResult" class="versus-result" aria-live="polite">
-        <div class="versus-placeholder">Pulsa <strong>GIRAR</strong> para sortear el VS.</div>
-      </div>
-      <div id="confetti" class="confetti" aria-hidden="true"></div>
+        <div id="versusResult" class="versus-result" aria-live="polite"><div class="versus-placeholder">Gira la ruleta para revelar la combinación.</div></div>
+        <div id="confetti" class="confetti" aria-hidden="true"></div>
+      </section>
     </section>
 
-    <section id="status" class="status">Pulsa “Randomizar equipos”.</section>
+    <section class="results-head">
+      <div><small>Equipos sorteados</small><h2>ALINEACIONES</h2></div>
+      <div id="status" class="status">Pokédex lista para el sorteo.</div>
+    </section>
     <section id="teams" class="teams"></section>
   </main>
 
   <template id="teamTemplate">
     <article class="team-card">
-      <div class="team-head">
-        <h2></h2>
-        <button class="ghost reroll-team">↻ Equipo</button>
-      </div>
+      <div class="team-head"><div class="player-orb"></div><h2></h2><button class="ghost reroll-team">↻ Equipo</button></div>
       <div class="pokemon-grid"></div>
     </article>
   </template>
-
   <template id="pokemonTemplate">
-    <div class="pokemon-card">
-      <img alt="" loading="lazy" />
-      <div class="pokemon-info">
-        <strong class="name"></strong>
-        <span class="meta"></span>
-      </div>
-      <button class="mini reroll-one" title="Cambiar solo este Pokémon">↻</button>
-    </div>
+    <div class="pokemon-card"><img alt="" loading="lazy"><div class="pokemon-info"><strong class="name"></strong><span class="meta"></span></div><button class="mini reroll-one" title="Cambiar Pokémon">↻</button></div>
   </template>
 
   <script src="app.js"></script>
