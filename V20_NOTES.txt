@@ -1,0 +1,6 @@
+V20 QUETZAL MEGA FIX
+- Mega forms use strict Mega-only sprite sources; never fall back to the normal form.
+- Mega Charizard X/Y and Mega Mewtwo X/Y are treated as distinct forms.
+- Added Mega Rayquaza to the Mega pool.
+- Pokédex labels are aligned to Quetzal's National Dex display: forms keep the base species number (e.g. Mega Charizard X/Y #0006, Mega Rayquaza #0384).
+- Legendary / mythical / Ultra Beast badge handling strengthened.
