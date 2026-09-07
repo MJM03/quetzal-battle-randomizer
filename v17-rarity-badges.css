@@ -1,0 +1,10 @@
+/* V17 — accurate Mega visuals + Legendary distinctions */
+.poke-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;align-items:center}
+.poke-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:999px;font-size:.48rem;line-height:1.2;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.poke-badge.mega{color:#fff3ff;background:linear-gradient(135deg,#7c3cff,#ed49c8);border:1px solid #f6c6ff88;box-shadow:0 0 10px #c64dff55}
+.poke-badge.legendary{color:#fff7d3;background:linear-gradient(135deg,#8f5b08,#f0b92d 55%,#fff0a3);border:1px solid #ffe59f99;box-shadow:0 0 10px #e8b42f55;text-shadow:0 1px 2px #5f3b00}
+.wheel-rarity-stack{position:absolute;top:-2px;right:-4px;z-index:8;display:flex;flex-direction:column;align-items:flex-end;gap:3px;pointer-events:none}
+.wheel-rarity-stack .poke-badge{font-size:.40rem;padding:2px 4px;box-shadow:0 0 7px #0006}
+.v17-mega-sprite{filter:drop-shadow(0 6px 7px #a54aff66)!important}
+.legendary-card{box-shadow:inset 0 0 0 1px #f0b92d25}
+@media(max-width:520px){.poke-badge{font-size:.44rem;padding:2px 5px}.wheel-rarity-stack .poke-badge{font-size:.36rem;padding:2px 3px}}
