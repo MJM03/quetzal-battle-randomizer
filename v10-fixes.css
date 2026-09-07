@@ -1,0 +1,67 @@
+/* V10 — iPhone overflow fixes + compact four-trainer battle card */
+
+/* Keep the player chips completely inside the panel on narrow screens. */
+.forge-panel{overflow:hidden!important}
+.team-roulette-names{
+  position:relative!important;left:auto!important;right:auto!important;top:auto!important;transform:none!important;
+  width:100%!important;max-width:430px!important;margin:10px auto 0!important;padding:0 12px!important;
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;
+  box-sizing:border-box!important;overflow:visible!important;
+}
+.team-roulette-names .roulette-chip{
+  width:100%!important;min-width:0!important;max-width:100%!important;margin:0!important;transform:none!important;
+  box-sizing:border-box!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+  text-align:center!important;padding:10px 8px!important;
+}
+.team-roulette-names .roulette-chip.active{transform:translateY(-2px)!important}
+
+/* Wheel: exactly 6 visual sectors, and final Pokemon remain upright. */
+.team-wheel-face{background:conic-gradient(from -30deg,#345d73 0 16.666%,#375943 16.666% 33.333%,#70572d 33.333% 50%,#78364f 50% 66.666%,#453c70 66.666% 83.333%,#276463 83.333% 100%)!important}
+.team-wheel-face:before{background:repeating-conic-gradient(from -30deg,transparent 0deg 59deg,#d8f5ffcc 59deg 60deg),radial-gradient(circle at 40% 28%,#fff3 0,transparent 33%),radial-gradient(circle,#0000 0 46%,#0008 86%)!important}
+.team-sprite-layer{overflow:visible!important}
+.v10-slot{position:absolute!important;transform:translate(-50%,-50%)!important;width:74px!important;height:86px!important;display:grid!important;place-items:center!important}
+.v10-slot .team-sprite{position:static!important;transform:none!important;width:66px!important;height:66px!important;object-fit:contain!important}
+.v10-slot .dex-badge{bottom:-1px!important}
+.team-wheel.v10-upright{transition:none!important;transform:rotate(0deg)!important}
+
+/* Four-player VS card. Each side has two compact trainer + Pokemon cells. */
+.battle-card-v10{overflow:hidden!important}
+.battle-arena-v10{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr);background:radial-gradient(ellipse at center bottom,#4667ff26 0,#081421 42%,#050c13 82%);min-height:360px;overflow:hidden}
+.v10-squad{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:10px 6px;min-width:0}
+.v10-squad.a{background:linear-gradient(120deg,#0f6fff30,transparent 72%);border-right:1px solid #60bdff35}
+.v10-squad.b{background:linear-gradient(240deg,#ff294830,transparent 72%);border-left:1px solid #ff6b8035}
+.v10-fighter{position:relative;min-width:0;overflow:hidden;border-radius:14px;border:1px solid #ffffff14;background:linear-gradient(180deg,#0c1b29cc,#06101acc);display:flex;flex-direction:column;justify-content:flex-end}
+.v10-stage{position:relative;height:250px;min-width:0;overflow:hidden}
+.v10-trainer,.v10-pokemon{position:absolute;object-fit:contain;filter:drop-shadow(0 12px 10px #000a)}
+.v10-trainer{left:-8%;bottom:0;width:66%;height:88%;z-index:1;image-rendering:auto}
+.v10-pokemon{right:-8%;bottom:3px;width:68%;height:70%;z-index:2}
+.v10-fighter.b .v10-trainer{left:auto;right:-8%;transform:scaleX(-1)}
+.v10-fighter.b .v10-pokemon{right:auto;left:-8%}
+.v10-fighter-info{position:relative;z-index:4;padding:8px 7px;background:linear-gradient(180deg,transparent,#02070be6 26%);min-width:0}
+.v10-fighter-info strong,.v10-fighter-info span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v10-fighter-info strong{font-size:.76rem;color:#fff}
+.v10-fighter-info span{font-size:.61rem;color:#91d5ff;margin-top:3px;text-transform:capitalize}
+.v10-fighter.b .v10-fighter-info{text-align:right}.v10-fighter.b .v10-fighter-info span{color:#ff9aaa}
+.battle-vs-core.v10{width:48px;height:48px;font-size:.86rem;align-self:center;justify-self:center;z-index:9}
+
+@media(max-width:760px){
+  .forge-stage{width:100%!important;max-width:100%!important;padding-left:0!important;padding-right:0!important}
+  .team-machine{width:min(370px,88vw)!important;max-width:100%!important}
+  .team-roulette-names{width:100%!important;max-width:100%!important;padding:0 10px!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .team-roulette-names .roulette-chip{font-size:.72rem!important;padding:10px 6px!important}
+  .battle-arena-v10{grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr);min-height:330px}
+  .v10-squad{grid-template-columns:1fr;gap:5px;padding:6px 3px}
+  .v10-fighter{min-height:145px}
+  .v10-stage{height:112px}
+  .v10-trainer{width:58%;height:96%;left:-3%}
+  .v10-pokemon{width:60%;height:90%;right:-4%}
+  .v10-fighter.b .v10-trainer{right:-3%}.v10-fighter.b .v10-pokemon{left:-4%}
+  .v10-fighter-info{padding:5px 4px}.v10-fighter-info strong{font-size:.64rem}.v10-fighter-info span{font-size:.53rem}
+  .battle-vs-core.v10{width:38px;height:38px;font-size:.7rem}
+}
+@media(max-width:430px){
+  .team-machine{width:min(350px,88vw)!important}
+  .team-roulette-names{padding:0 8px!important;gap:7px!important}
+  .battle-arena-v10{grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);min-height:312px}
+  .v10-stage{height:103px}.battle-vs-core.v10{width:34px;height:34px;font-size:.62rem}
+}
