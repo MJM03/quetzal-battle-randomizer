@@ -1,0 +1,43 @@
+/* V11 — mobile player dock, roulette-only VS, Pokemon trainer cleanup */
+
+/* Player dock: force a true in-flow 2x2 grid inside the panel. */
+.forge-stage{width:100%!important;max-width:100%!important;box-sizing:border-box!important;overflow:hidden!important}
+.team-roulette-names{
+  position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+  transform:none!important;float:none!important;clear:both!important;
+  align-self:stretch!important;justify-self:stretch!important;
+  width:calc(100% - 24px)!important;max-width:none!important;min-width:0!important;
+  margin:18px 12px 0!important;padding:0!important;box-sizing:border-box!important;
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;
+  overflow:hidden!important;
+}
+.team-roulette-names .roulette-chip{
+  position:relative!important;inset:auto!important;transform:none!important;
+  width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;
+  box-sizing:border-box!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+  text-align:center!important;padding:10px 8px!important;font-size:.76rem!important;
+}
+.team-roulette-names .roulette-chip.active{transform:translateY(-2px)!important}
+
+/* The VS section now shows only the wheel: no duplicate combination list below. */
+.roulette-options{display:none!important}
+.vs-stage{display:block!important;margin-top:12px!important}
+.vs-machine{margin:0 auto!important}
+.versus-panel .vs-stage{grid-template-columns:1fr!important}
+
+/* Trainer imagery should read like classic Pokemon battle sprites, not generic avatars. */
+.trainer-avatar,.fighter-trainer,.v10-trainer,.v11-trainer{
+  image-rendering:auto!important;object-fit:contain!important;filter:drop-shadow(0 12px 10px #000a)!important;
+}
+.battle-card .trainer-avatar,.battle-card .fighter-trainer,.battle-card .v10-trainer{max-width:100%!important}
+
+@media(max-width:760px){
+  .forge-panel{overflow:hidden!important}
+  .team-roulette-names{width:calc(100% - 16px)!important;margin:16px 8px 0!important;gap:8px!important}
+  .team-roulette-names .roulette-chip{font-size:.74rem!important;padding:10px 6px!important}
+  .vs-machine{width:min(390px,92vw)!important}
+}
+@media(max-width:430px){
+  .team-roulette-names{width:calc(100% - 12px)!important;margin-inline:6px!important;gap:7px!important}
+  .team-roulette-names .roulette-chip{font-size:.72rem!important;padding-inline:5px!important}
+}
