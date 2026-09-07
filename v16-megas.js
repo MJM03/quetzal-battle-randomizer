@@ -32,7 +32,7 @@
 
   window.makeTeamForPlayer=function(playerIndex){
     const c=cfg(),pool=poolFor(c),used=usedAcrossTeams(playerIndex),team=[];
-    const megaChance=megaEnabled()&&(Math.random()<(c.mode==='chaos'?.42:.35));
+    const megaChance=megaEnabled()&&(Math.random() < (c.mode==='chaos' ? 0.42 : 0.35));
     if(megaChance){
       const candidates=availableMega(c,used);
       const m=candidates.length?rand(candidates):null;
@@ -55,7 +55,7 @@
     const hadMega=!!team[pi]?.mega;
     const anotherMega=team.some((p,i)=>i!==pi&&p?.mega);
     let replacement=null;
-    if(megaEnabled()&&!anotherMega&&hadMega&&Math.random()<.55){
+    if(megaEnabled()&&!anotherMega&&hadMega&&Math.random()<0.55){
       const candidates=availableMega(c,used);const m=candidates.length?rand(candidates):null;if(m)replacement=makeMegaPokemon(m);
     }
     if(!replacement)replacement=pick(pool,used,c);
