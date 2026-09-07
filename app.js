@@ -3,6 +3,9 @@ const teamsEl = $('#teams');
 const statusEl = $('#status');
 const namesEl = $('#playerNames');
 const versusEl = $('#versusResult');
+const wheelEl = $('#rouletteWheel');
+const wheelLabelsEl = $('#wheelLabels');
+const rouletteShell = document.querySelector('.roulette-shell');
 const SETTINGS_KEY='qbr-settings-v2';
 const NAMES_KEY='qbr-player-names-v1';
 const MATCHUP_KEY='qbr-versus-v1';
@@ -15,14 +18,12 @@ let pokemon = [];
 let currentTeams = [];
 let currentMatchup = JSON.parse(localStorage.getItem(MATCHUP_KEY) || 'null');
 let playerNames = JSON.parse(localStorage.getItem(NAMES_KEY) || '["Jugador 1","Jugador 2","Jugador 3","Jugador 4"]');
+let wheelRotation = 0;
+let spinning = false;
 while(playerNames.length<4) playerNames.push(`Jugador ${playerNames.length+1}`);
 
-function saveNames(){
-  localStorage.setItem(NAMES_KEY,JSON.stringify(playerNames));
-}
-function saveSettings(){
-  localStorage.setItem(SETTINGS_KEY,JSON.stringify(cfg()));
-}
+function saveNames(){ localStorage.setItem(NAMES_KEY,JSON.stringify(playerNames)); }
+function saveSettings(){ localStorage.setItem(SETTINGS_KEY,JSON.stringify(cfg())); }
 function loadSettings(){
   try{
     const s=JSON.parse(localStorage.getItem(SETTINGS_KEY)||'null');
@@ -51,6 +52,7 @@ function renderPlayerInputs(){
       playerNames[i]=input.value.trimStart();
       saveNames();
       if(currentTeams.length) render();
+      renderWheelLabels();
       renderVersus();
     });
     namesEl.appendChild(input);
@@ -69,29 +71,104 @@ function shuffle(values){
   }
   return a;
 }
-function randomizeVersus(){
+function buildMatchup(){
   const count=+$('#players').value;
   const order=shuffle(Array.from({length:count},(_,i)=>i));
-  if(count===4){
-    currentMatchup={players:4,teamA:[order[0],order[1]],teamB:[order[2],order[3]]};
-  }else if(count===3){
-    currentMatchup={players:3,teamA:[order[0]],teamB:[order[1]],bye:order[2]};
-  }else{
-    currentMatchup={players:2,teamA:[order[0]],teamB:[order[1]]};
-  }
-  localStorage.setItem(MATCHUP_KEY,JSON.stringify(currentMatchup));
-  renderVersus();
+  if(count===4) return {players:4,teamA:[order[0],order[1]],teamB:[order[2],order[3]]};
+  if(count===3) return {players:3,teamA:[order[0]],teamB:[order[1]],bye:order[2]};
+  return {players:2,teamA:[order[0]],teamB:[order[1]]};
 }
-function renderVersus(){
+function renderWheelLabels(){
   const count=+$('#players').value;
+  wheelLabelsEl.innerHTML='';
+  const gradients={
+    2:'conic-gradient(from -90deg,#2563eb 0 50%,#db2777 50% 100%)',
+    3:'conic-gradient(from -90deg,#2563eb 0 33.333%,#7c3aed 33.333% 66.666%,#ea580c 66.666% 100%)',
+    4:'conic-gradient(from -45deg,#2563eb 0 25%,#7c3aed 25% 50%,#db2777 50% 75%,#ea580c 75% 100%)'
+  };
+  wheelEl.style.background=gradients[count] || gradients[4];
+  for(let i=0;i<count;i++){
+    const angle=(-90 + (360/count)*i) * Math.PI/180;
+    const chip=document.createElement('span');
+    chip.className='wheel-name';
+    chip.textContent=displayName(i);
+    chip.style.left=`${50 + Math.cos(angle)*36}%`;
+    chip.style.top=`${50 + Math.sin(angle)*36}%`;
+    wheelLabelsEl.appendChild(chip);
+  }
+}
+function setVersusLoading(){
+  versusEl.classList.remove('reveal');
+  versusEl.innerHTML='';
+  const placeholder=document.createElement('div');
+  placeholder.className='versus-placeholder';
+  placeholder.textContent='Sorteando enfrentamiento…';
+  versusEl.appendChild(placeholder);
+}
+function randomizeVersus(){
+  if(spinning) return;
+  spinning=true;
+  const btn=$('#versusBtn');
+  const next=buildMatchup();
+  btn.disabled=true;
+  rouletteShell.classList.add('is-spinning');
+  setVersusLoading();
+
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const extra=1800 + Math.floor(Math.random()*720) + 120;
+  wheelRotation += extra;
+  wheelEl.style.transform=`rotate(${wheelRotation}deg)`;
+
+  window.setTimeout(()=>{
+    currentMatchup=next;
+    localStorage.setItem(MATCHUP_KEY,JSON.stringify(currentMatchup));
+    spinning=false;
+    btn.disabled=false;
+    rouletteShell.classList.remove('is-spinning');
+    renderVersus(true);
+  }, reduced ? 80 : 3300);
+}
+function makeSide(label,ids){
+  const side=document.createElement('div');
+  side.className='side';
+  const small=document.createElement('span');
+  small.className='side-label';
+  small.textContent=label;
+  const strongEl=document.createElement('strong');
+  strongEl.textContent=ids.map(displayName).join(' + ');
+  side.append(small,strongEl);
+  return side;
+}
+function renderVersus(reveal=false){
+  const count=+$('#players').value;
+  versusEl.classList.remove('reveal');
+  versusEl.innerHTML='';
   if(!currentMatchup || currentMatchup.players!==count){
-    versusEl.textContent='Pulsa “Randomizar VS”.';
+    const placeholder=document.createElement('div');
+    placeholder.className='versus-placeholder';
+    placeholder.innerHTML='Pulsa <strong>GIRAR</strong> para sortear el VS.';
+    versusEl.appendChild(placeholder);
     return;
   }
-  const names=ids=>ids.map(displayName).join(' + ');
-  const left=names(currentMatchup.teamA);
-  const right=names(currentMatchup.teamB);
-  versusEl.innerHTML=`<div class="side"><span class="side-label">Equipo A</span><strong>${left}</strong></div><div class="vs-badge">VS</div><div class="side"><span class="side-label">Equipo B</span><strong>${right}</strong></div>${currentMatchup.bye!==undefined?`<div class="bye">Descansa: <strong>${displayName(currentMatchup.bye)}</strong></div>`:''}`;
+  versusEl.appendChild(makeSide('Equipo A',currentMatchup.teamA));
+  const badge=document.createElement('div');
+  badge.className='vs-badge';
+  badge.textContent='VS';
+  versusEl.appendChild(badge);
+  versusEl.appendChild(makeSide('Equipo B',currentMatchup.teamB));
+  if(currentMatchup.bye!==undefined){
+    const bye=document.createElement('div');
+    bye.className='bye';
+    bye.append('Descansa: ');
+    const b=document.createElement('strong');
+    b.textContent=displayName(currentMatchup.bye);
+    bye.appendChild(b);
+    versusEl.appendChild(bye);
+  }
+  if(reveal){
+    void versusEl.offsetWidth;
+    versusEl.classList.add('reveal');
+  }
 }
 
 async function loadPokemon(){
@@ -173,10 +250,11 @@ function render(){
 
 $('#rollBtn').addEventListener('click',()=>pokemon.length?generateAll():loadPokemon().then(generateAll));
 $('#versusBtn').addEventListener('click',randomizeVersus);
-$('#players').addEventListener('change',()=>{renderPlayerInputs();saveSettings();if(currentTeams.length) currentTeams=currentTeams.slice(0,+$('#players').value),render();renderVersus();});
+$('#players').addEventListener('change',()=>{renderPlayerInputs();renderWheelLabels();saveSettings();if(currentTeams.length) currentTeams=currentTeams.slice(0,+$('#players').value),render();renderVersus();});
 ['teamSize','level','mode','legendaries','unique','perfectIv'].forEach(id=>$('#'+id).addEventListener('change',saveSettings));
 loadSettings();
 renderPlayerInputs();
+renderWheelLabels();
 renderVersus();
 loadPokemon().catch(()=>{});
 
