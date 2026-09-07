@@ -1,0 +1,35 @@
+/* V12 — restore perfectly round VS roulette after V11 layout changes */
+.versus-panel{overflow:hidden!important}
+.vs-stage{display:block!important;width:100%!important;max-width:100%!important;margin:14px auto 0!important}
+.vs-machine{
+  position:relative!important;
+  width:min(390px,88vw)!important;
+  height:min(390px,88vw)!important;
+  aspect-ratio:auto!important;
+  margin:0 auto!important;
+  display:grid!important;
+  place-items:center!important;
+  perspective:1000px!important;
+  flex:none!important;
+}
+.wheel-tilt{
+  position:absolute!important;
+  inset:8%!important;
+  width:auto!important;height:auto!important;
+  aspect-ratio:1/1!important;
+  transform:rotateX(7deg)!important;
+  transform-style:preserve-3d!important;
+}
+.roulette-wheel{position:absolute!important;inset:0!important;width:auto!important;height:auto!important;aspect-ratio:1/1!important;border-radius:50%!important}
+.wheel-tilt:before{border-radius:50%!important}
+.vs-wheel-shadow{bottom:3%!important;width:76%!important;height:9%!important}
+.spin-button{aspect-ratio:1/1!important;border-radius:50%!important}
+
+@media(max-width:760px){
+  .vs-machine{width:min(360px,88vw)!important;height:min(360px,88vw)!important}
+  .wheel-tilt{inset:8%!important;transform:rotateX(5deg)!important}
+}
+@media(max-width:430px){
+  .vs-machine{width:min(340px,88vw)!important;height:min(340px,88vw)!important}
+  .wheel-tilt{inset:8.5%!important}
+}
