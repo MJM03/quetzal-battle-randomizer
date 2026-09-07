@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <title>Quetzal Battle Randomizer</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Pokémon Quetzal</p>
+      <h1>Battle Randomizer</h1>
+      <p class="subtitle">Genera equipos rápidos para 2–4 jugadores, sin repetir Pokémon y listos para crear en Quetzal.</p>
+    </div>
+    <button id="installBtn" class="ghost" hidden>Instalar app</button>
+  </header>
+
+  <main>
+    <section class="panel controls">
+      <div class="field">
+        <label for="players">Jugadores</label>
+        <select id="players">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="teamSize">Pokémon por jugador</label>
+        <select id="teamSize">
+          <option>3</option><option selected>6</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="level">Nivel</label>
+        <select id="level"><option>50</option><option selected>100</option></select>
+      </div>
+      <div class="field">
+        <label for="mode">Modo</label>
+        <select id="mode"><option value="balanced" selected>Balanceado</option><option value="chaos">Random total</option></select>
+      </div>
+      <div class="checks">
+        <label><input id="legendaries" type="checkbox" /> Permitir legendarios/míticos</label>
+        <label><input id="unique" type="checkbox" checked /> Sin repetir especies</label>
+        <label><input id="perfectIv" type="checkbox" checked /> IV 31</label>
+      </div>
+      <button id="rollBtn" class="primary">🎲 Randomizar equipos</button>
+    </section>
+
+    <section id="status" class="status">Pulsa “Randomizar equipos”.</section>
+    <section id="teams" class="teams"></section>
+  </main>
+
+  <template id="teamTemplate">
+    <article class="team-card">
+      <div class="team-head">
+        <h2></h2>
+        <button class="ghost reroll-team">↻ Equipo</button>
+      </div>
+      <div class="pokemon-grid"></div>
+    </article>
+  </template>
+
+  <template id="pokemonTemplate">
+    <div class="pokemon-card">
+      <img alt="" loading="lazy" />
+      <div class="pokemon-info">
+        <strong class="name"></strong>
+        <span class="meta"></span>
+      </div>
+      <button class="mini reroll-one" title="Cambiar solo este Pokémon">↻</button>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
