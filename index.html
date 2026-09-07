@@ -59,28 +59,37 @@
         <div>
           <p class="section-label">Sorteo de enfrentamiento</p>
           <h2>Ruleta VS</h2>
-          <p class="versus-copy">Gira la ruleta para sortear los equipos de forma aleatoria.</p>
+          <p class="versus-copy">Cada color representa una combinación concreta. La ruleta se detiene en una opción y ese será el VS.</p>
         </div>
-        <span class="live-pill"><span></span> LISTO</span>
+        <button id="soundBtn" class="sound-toggle" type="button" aria-pressed="true" title="Activar o desactivar sonidos">🔊 <span>Sonido</span></button>
       </div>
 
-      <div class="roulette-stage">
-        <div class="roulette-shell" aria-label="Ruleta de jugadores">
-          <div class="roulette-pointer" aria-hidden="true"></div>
-          <div id="rouletteWheel" class="roulette-wheel">
-            <div class="wheel-rings" aria-hidden="true"></div>
+      <div class="roulette-layout">
+        <div class="roulette-stage">
+          <div class="roulette-shell" aria-label="Ruleta de enfrentamientos">
+            <div class="roulette-pointer" aria-hidden="true"></div>
+            <div id="rouletteWheel" class="roulette-wheel">
+              <div class="wheel-rings" aria-hidden="true"></div>
+              <div id="wheelMarkers" class="wheel-markers" aria-hidden="true"></div>
+            </div>
+            <button id="versusBtn" class="spin-button" type="button">
+              <span class="spin-icon">↻</span>
+              <span>GIRAR</span>
+            </button>
           </div>
-          <div id="wheelLabels" class="wheel-labels" aria-hidden="true"></div>
-          <button id="versusBtn" class="spin-button" type="button">
-            <span class="spin-icon">↻</span>
-            <span>GIRAR</span>
-          </button>
+        </div>
+
+        <div class="roulette-explainer">
+          <div class="explainer-title">Opciones posibles</div>
+          <div id="rouletteOptions" class="roulette-options"></div>
+          <p class="explainer-note">El color no pertenece a un jugador: identifica una combinación de equipos.</p>
         </div>
       </div>
 
       <div id="versusResult" class="versus-result" aria-live="polite">
         <div class="versus-placeholder">Pulsa <strong>GIRAR</strong> para sortear el VS.</div>
       </div>
+      <div id="confetti" class="confetti" aria-hidden="true"></div>
     </section>
 
     <section id="status" class="status">Pulsa “Randomizar equipos”.</section>
