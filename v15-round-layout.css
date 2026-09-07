@@ -1,0 +1,15 @@
+/* V15 — alignments live inside the team roulette panel */
+.forge-alignments{width:100%;box-sizing:border-box;margin-top:24px;padding:0 18px 22px;border-top:1px solid #244b61}
+.forge-alignments .results-head{margin:0!important;padding:24px 4px 14px!important;display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:16px!important}
+.forge-alignments .results-head small{display:block;color:#7f9aa8;letter-spacing:.15em;text-transform:uppercase}
+.forge-alignments .results-head h2{margin:4px 0 0!important}
+.forge-alignments .status{max-width:58%;text-align:right}
+.forge-alignments .teams{width:100%!important;max-width:none!important;margin:0!important;padding:0!important;box-sizing:border-box!important;display:grid!important;grid-template-columns:1fr!important;gap:18px!important}
+.forge-alignments .team-card{width:100%!important;max-width:none!important;margin:0!important;box-sizing:border-box!important}
+
+@media(max-width:760px){
+ .forge-alignments{padding:0 10px 18px;margin-top:20px}
+ .forge-alignments .results-head{padding:20px 2px 12px!important;display:block!important}
+ .forge-alignments .status{max-width:none;text-align:left;margin-top:8px}
+ .forge-alignments .teams{gap:14px!important}
+}
