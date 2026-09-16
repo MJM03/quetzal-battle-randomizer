@@ -1,0 +1,21 @@
+/* V27 — featured trainer cards */
+.v27-featured-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:12px 14px 14px;border-top:1px solid rgba(111,225,255,.16);background:rgba(3,12,22,.42)}
+.featured-fighter{min-width:0;border:1px solid rgba(111,225,255,.18);border-radius:14px;background:linear-gradient(180deg,rgba(12,31,48,.9),rgba(5,17,29,.92));padding:8px 6px 9px;text-align:center;box-sizing:border-box;overflow:hidden}
+.featured-fighter:nth-child(1),.featured-fighter:nth-child(2){border-color:rgba(54,184,93,.28)}
+.featured-fighter:nth-child(3),.featured-fighter:nth-child(4){border-color:rgba(47,112,255,.28)}
+.featured-player{display:flex;justify-content:center;align-items:center;gap:4px;font-size:.62rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.featured-player span{font-weight:950;opacity:.72}.featured-player strong{overflow:hidden;text-overflow:ellipsis}
+.featured-visual{height:104px;display:flex;align-items:flex-end;justify-content:center;gap:2px;position:relative}
+.featured-trainer-wrap,.featured-pokemon-wrap{width:50%;height:100%;display:flex;align-items:flex-end;justify-content:center;min-width:0}
+.featured-trainer-wrap img.trainer-avatar{width:62px!important;height:62px!important;max-width:62px!important;max-height:62px!important;object-fit:contain!important;image-rendering:auto}
+.featured-pokemon-wrap img.featured-pokemon{width:78px!important;height:78px!important;max-width:78px!important;max-height:78px!important;object-fit:contain!important}
+.featured-copy{min-width:0;margin-top:2px}.featured-copy>strong{display:block;font-size:.68rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.featured-copy>span{display:block;font-size:.55rem;opacity:.62;margin-top:3px;white-space:nowrap}
+.featured-tags{display:flex;justify-content:center;gap:3px;flex-wrap:wrap;margin-top:4px}.featured-tag{font-size:.45rem;font-weight:950;letter-spacing:.04em;padding:2px 4px;border-radius:999px;border:1px solid rgba(255,255,255,.12)}.featured-tag.mega{color:#ffd66b}.featured-tag.legendary{color:#ff91a7}
+.featured-fighter.empty .featured-visual{height:82px}.featured-fighter.empty .featured-trainer-wrap{width:100%}
+.v27-clean-featured .formed-teams-grid{margin-bottom:0}
+@media(max-width:650px){
+ .v27-featured-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:9px 8px 10px}
+ .featured-fighter{padding:7px 4px 8px;border-radius:12px}
+ .featured-visual{height:88px}.featured-trainer-wrap img.trainer-avatar{width:52px!important;height:52px!important;max-width:52px!important;max-height:52px!important}.featured-pokemon-wrap img.featured-pokemon{width:64px!important;height:64px!important;max-width:64px!important;max-height:64px!important}
+ .featured-player{font-size:.57rem}.featured-copy>strong{font-size:.62rem}.featured-copy>span{font-size:.5rem}
+}
