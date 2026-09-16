@@ -1,37 +1,28 @@
-.vs-stage .wheel-marker span{font-size:clamp(15px,2vw,24px);font-weight:950;letter-spacing:.08em;text-shadow:0 2px 8px rgba(0,0,0,.55)}
+.vs-stage .wheel-marker span{font-size:clamp(13px,1.7vw,21px);font-weight:950;letter-spacing:.06em;text-shadow:0 2px 8px rgba(0,0,0,.55)}
 .battle-card-head{gap:10px;align-items:center}
 .battle-team-label{min-width:0;max-width:38%;text-align:center}
 .battle-team-label small{display:block;font-size:.62rem;letter-spacing:.12em;opacity:.7;margin-bottom:5px}
 .battle-team-label>div{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
-.battle-player-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 7px;border-radius:999px;border:1px solid rgba(111,225,255,.24);background:rgba(9,31,49,.72);font-size:.65rem;line-height:1.1;white-space:nowrap;max-width:100%}
+.battle-player-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 7px;border-radius:999px;border:1px solid rgba(111,225,255,.24);background:rgba(9,31,49,.72);font-size:.65rem;line-height:1.1;white-space:nowrap;max-width:100%;box-sizing:border-box}
 .battle-player-chip span{overflow:hidden;text-overflow:ellipsis;max-width:105px}
 .formed-teams-grid{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:10px;margin:10px 14px 4px}
-.formed-team{min-width:0;border:1px solid rgba(111,225,255,.2);border-radius:14px;padding:10px;background:rgba(7,20,33,.72);box-shadow:inset 0 0 18px rgba(30,180,255,.04)}
+.formed-team{min-width:0;border:1px solid rgba(111,225,255,.2);border-radius:14px;padding:10px;background:rgba(7,20,33,.72);box-shadow:inset 0 0 18px rgba(30,180,255,.04);box-sizing:border-box}
 .formed-team.a{border-color:rgba(54,184,93,.32)}
 .formed-team.b{border-color:rgba(47,112,255,.32)}
 .formed-team-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:7px;font-weight:900;font-size:.75rem;letter-spacing:.08em}
 .formed-team-title small{font-size:.58rem;opacity:.6;font-weight:700;letter-spacing:.03em}
 .formed-team-players{display:flex;flex-direction:column;gap:5px}
-.formed-player{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:7px;padding:6px 8px;border-radius:9px;background:rgba(255,255,255,.035);font-size:.72rem;min-width:0}
-.formed-player-id{font-weight:950;opacity:.8}
-.formed-player-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.formed-player-status{font-size:.52rem;font-weight:900;letter-spacing:.05em;opacity:.65;white-space:nowrap}
-.formed-vs{align-self:center;font-weight:1000;font-size:.8rem;opacity:.65;padding:0 2px}
-.formed-bye{margin:7px 14px 0;text-align:center;font-size:.65rem;opacity:.72}
+.formed-player{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:7px;padding:6px 8px;border-radius:9px;background:rgba(255,255,255,.035);font-size:.72rem;min-width:0;box-sizing:border-box}
+.formed-player-id{font-weight:950;opacity:.8}.formed-player-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.formed-player-status{font-size:.52rem;font-weight:900;letter-spacing:.05em;opacity:.65;white-space:nowrap}.formed-vs{align-self:center;font-weight:1000;font-size:.8rem;opacity:.65;padding:0 2px}.formed-bye{margin:7px 14px 0;text-align:center;font-size:.65rem;opacity:.72}
+/* Override definitivo para los sprites de la arena: nunca usar su tamaño natural. */
+.battle-arena img,.battle-arena .trainer-sprite,.battle-arena .pokemon-sprite{width:72px!important;height:72px!important;max-width:72px!important;max-height:72px!important;object-fit:contain!important}
+.battle-arena .battle-side,.battle-arena .battle-side>*{min-width:0;max-width:100%;box-sizing:border-box}
 @media(max-width:650px){
-  .battle-card{width:100%;box-sizing:border-box;overflow:hidden}
-  .battle-card-head{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;padding:10px 9px}
-  .battle-card-title{order:-1;text-align:center}
-  .battle-team-label{max-width:none;width:100%;box-sizing:border-box}
-  .battle-team-label>div{gap:4px}
-  .battle-player-chip{font-size:.58rem;padding:4px 6px;max-width:calc(100vw - 38px)}
-  .battle-player-chip span{max-width:95px}
-  .vs-stage .wheel-marker span{font-size:13px}
-  .formed-teams-grid{grid-template-columns:1fr;gap:7px;margin:9px 9px 3px}
-  .formed-vs{text-align:center;padding:1px 0;font-size:.72rem}
-  .formed-team{padding:9px}
-  .formed-team-title{font-size:.7rem}
-  .formed-player{grid-template-columns:auto minmax(0,1fr);gap:6px;padding:6px 7px}
-  .formed-player-status{display:none}
-  .formed-bye{margin:6px 9px 0}
+ .battle-card{width:100%;max-width:100%;box-sizing:border-box;overflow:hidden}
+ .battle-card-head{display:grid;grid-template-columns:1fr;gap:6px;padding:9px 8px}.battle-card-title{order:-1;text-align:center;font-size:.9rem}
+ .battle-team-label{max-width:none;width:100%;box-sizing:border-box}.battle-team-label>div{gap:4px}.battle-player-chip{font-size:.56rem;padding:3px 5px}.battle-player-chip span{max-width:80px}
+ .vs-stage .wheel-marker span{font-size:12px}
+ .formed-teams-grid{grid-template-columns:1fr;gap:6px;margin:8px 8px 3px}.formed-vs{text-align:center;padding:1px 0;font-size:.7rem}.formed-team{padding:8px}.formed-team-title{font-size:.68rem}.formed-player{grid-template-columns:auto minmax(0,1fr);gap:5px;padding:5px 6px;font-size:.68rem}.formed-player-status{display:none}.formed-bye{margin:5px 8px 0}
+ .battle-arena img,.battle-arena .trainer-sprite,.battle-arena .pokemon-sprite{width:48px!important;height:48px!important;max-width:48px!important;max-height:48px!important}
+ .battle-arena{max-width:100%;overflow:hidden}
 }
