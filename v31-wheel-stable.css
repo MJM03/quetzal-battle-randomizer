@@ -1,0 +1,5 @@
+/* V31 — elimina cualquier rastro visual de sprites extra */
+#teamSpriteLayer{position:absolute;inset:0;overflow:visible;pointer-events:none}
+#teamSpriteLayer .v31-slot{display:block!important;visibility:visible!important}
+#teamSpriteLayer .v31-slot img.team-sprite{width:72px!important;height:72px!important;max-width:72px!important;max-height:72px!important;object-fit:contain!important;display:block!important}
+@media(max-width:700px){#teamSpriteLayer .v31-slot img.team-sprite{width:52px!important;height:52px!important;max-width:52px!important;max-height:52px!important}}
