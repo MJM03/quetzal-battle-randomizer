@@ -1,33 +1,21 @@
-/* V29 — ruleta refleja exactamente el equipo generado */
+/* V29 — ruleta sincronizada con el equipo real */
 (function(){
-  const original=window.renderTeamWheelPreview;
-  if(typeof original!=='function')return;
-
-  function teamSize(){
-    const el=document.querySelector('#teamSize');
-    return el?+el.value:6;
+  let lastSignature='';
+  function size(){const el=document.querySelector('#teamSize');return el?+el.value:6}
+  function readTeams(){try{return JSON.parse(localStorage.getItem('qbr-teams-v7')||'[]')}catch{return []}}
+  function currentTeam(){const teams=readTeams();const draft=+(localStorage.getItem('qbr-draft-index-v7')||0);return teams[Math.max(0,draft-1)]||teams[teams.length-1]||[]}
+  function trimVisible(){const layer=document.querySelector('#teamSpriteLayer');if(!layer)return;[...layer.querySelectorAll('.team-sprite-wrap')].forEach((n,i)=>n.hidden=i>=size())}
+  function paint(team){
+    const ids=(team||[]).map(p=>p?.id).filter(Number.isInteger).slice(0,size());
+    const layer=document.querySelector('#teamSpriteLayer');
+    if(!layer)return;
+    if(!ids.length){trimVisible();return}
+    const original=window.__qbrOriginalWheelPreview;
+    if(typeof original==='function')original(ids,true);
+    else if(typeof window.renderTeamWheelPreview==='function'&&!window.__qbrWheelGuard){window.__qbrWheelGuard=true;window.renderTeamWheelPreview(ids,true);window.__qbrWheelGuard=false}
+    trimVisible();
   }
-
-  window.renderTeamWheelPreview=function(ids,showDex=false){
-    let list=Array.isArray(ids)?ids.filter(Number.isInteger):[];
-    // En una configuración de 3/6, la ruleta nunca muestra más Pokémon que el equipo.
-    list=list.slice(0,teamSize());
-    if(!list.length && Array.isArray(window.currentTeams)){
-      const idx=+(localStorage.getItem('qbr-draft-index-v7')||0);
-      const team=window.currentTeams[Math.max(0,idx-1)]||[];
-      list=team.map(p=>p?.id).filter(Number.isInteger).slice(0,teamSize());
-    }
-    original(list,showDex);
-  };
-
-  // Tras un reroll automático/manual, vuelve a pintar la ruleta con el mismo equipo.
-  window.QBRRefreshTeamWheel=function(){
-    try{
-      const teams=JSON.parse(localStorage.getItem('qbr-teams-v7')||'[]');
-      const idx=+(localStorage.getItem('qbr-draft-index-v7')||0);
-      const team=teams[Math.max(0,idx-1)]||teams[teams.length-1]||[];
-      const ids=team.map(p=>p?.id).filter(Number.isInteger).slice(0,teamSize());
-      if(ids.length)window.renderTeamWheelPreview(ids,true);
-    }catch(e){console.warn('QBR V29 wheel sync',e)}
-  };
+  function sync(){const team=currentTeam();const sig=JSON.stringify({s:size(),t:team.map(p=>p?.id).filter(Number.isInteger)});if(sig===lastSignature)return;lastSignature=sig;paint(team)}
+  function install(){sync();trimVisible();setInterval(()=>{sync();trimVisible()},180);document.querySelector('#teamSize')?.addEventListener('change',()=>{lastSignature='';sync();})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
 })();
