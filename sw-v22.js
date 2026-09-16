@@ -1,7 +1,7 @@
-const APP_CACHE='qbr-v22-generations-app';
-const MEDIA_CACHE='qbr-v22-generations-media';
-const API_CACHE='qbr-v22-generations-api';
-const ASSETS=['./','./index.html','./styles.css','./arena-v5-patch.css','./wheel-match-v6.css','./player-flow-v7.css','./battle-card-v8.css','./v9-fixes.css','./v10-fixes.css','./v11-fixes.css','./v12-round-wheel.css','./v14-images.css','./v15-round-layout.css','./v16-megas.css','./v17-rarity-badges.css','./v18-wheel-polish.css','./v20-quetzal-megas.css','./v22-generations.css','./app-v8.js','./v9-fixes.js','./v10-fixes.js','./v11-fixes.js','./v13-images.js','./v14-image-fallbacks.js','./v15-round-layout.js','./v16-megas.js','./v17-rarity-badges.js','./v18-wheel-polish.js','./v19-mega-forms.js','./v20-quetzal-megas.js','./v20-activate.js','./v21-speed-cache.js','./v22-generations.js','./manifest.webmanifest'];
+const APP_CACHE='qbr-v24-app';
+const MEDIA_CACHE='qbr-v24-media';
+const API_CACHE='qbr-v24-api';
+const ASSETS=['./','./index.html','./styles.css','./arena-v5-patch.css','./wheel-match-v6.css','./player-flow-v7.css','./battle-card-v8.css','./v9-fixes.css','./v10-fixes.css','./v11-fixes.css','./v12-round-wheel.css','./v14-images.css','./v15-round-layout.css','./v16-megas.css','./v17-rarity-badges.css','./v18-wheel-polish.css','./v20-quetzal-megas.css','./v22-generations.css','./v23-generation-combos.css','./v24-team-matchups.css','./app-v8.js','./v9-fixes.js','./v10-fixes.js','./v11-fixes.js','./v13-images.js','./v14-image-fallbacks.js','./v15-round-layout.js','./v16-megas.js','./v17-rarity-badges.js','./v18-wheel-polish.js','./v19-mega-forms.js','./v20-quetzal-megas.js','./v20-activate.js','./v21-speed-cache.js','./v22-generations.js','./v23-generation-combos.js','./v24-team-matchups.js','./manifest.webmanifest'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(APP_CACHE).then(c=>c.addAll(ASSETS)))});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>![APP_CACHE,MEDIA_CACHE,API_CACHE].includes(k)).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 async function cacheFirst(req,cacheName){const c=await caches.open(cacheName);const hit=await c.match(req);if(hit)return hit;const r=await fetch(req);if(r&&(r.ok||r.type==='opaque'))c.put(req,r.clone()).catch(()=>{});return r}
