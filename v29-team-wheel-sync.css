@@ -1,0 +1,2 @@
+/* V29 — controla visualmente la cantidad de Pokémon de la ruleta */
+#teamSpriteLayer .team-sprite-wrap[hidden]{display:none!important}
