@@ -1,0 +1,5 @@
+/* V38 — capa animada independiente dentro de cada tarjeta */
+#teams .pokemon-card{position:relative;overflow:hidden}
+#teams .pokemon-card > img:first-child{position:relative;z-index:1}
+#teams .pokemon-card .qbr-team-card-gif{position:absolute!important;z-index:2;inset:0;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:contain!important;pointer-events:none!important;background:transparent!important}
+#teams .pokemon-card .pokemon-info,#teams .pokemon-card .mini{position:relative;z-index:3}
