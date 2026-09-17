@@ -1,5 +1,36 @@
-/* V38 — capa animada independiente dentro de cada tarjeta */
+/* V39 — GIF de EQUIPOS SORTEADOS sin alterar la alineación */
 #teams .pokemon-card{position:relative;overflow:hidden}
-#teams .pokemon-card > img:first-child{position:relative;z-index:1}
-#teams .pokemon-card .qbr-team-card-gif{position:absolute!important;z-index:2;inset:0;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:contain!important;pointer-events:none!important;background:transparent!important}
-#teams .pokemon-card .pokemon-info,#teams .pokemon-card .mini{position:relative;z-index:3}
+
+/* La imagen original conserva exactamente su espacio de 44x44 */
+#teams .pokemon-card > img:first-child{
+  position:relative!important;
+  z-index:1!important;
+  width:44px!important;
+  height:44px!important;
+  max-width:44px!important;
+  max-height:44px!important;
+  object-fit:contain!important;
+}
+
+/* El GIF ocupa SOLO el mismo cuadro del sprite, no toda la tarjeta */
+#teams .pokemon-card > .qbr-team-card-gif{
+  position:absolute!important;
+  left:8px!important;
+  top:8px!important;
+  width:44px!important;
+  height:44px!important;
+  max-width:44px!important;
+  max-height:44px!important;
+  object-fit:contain!important;
+  z-index:2!important;
+  display:block!important;
+  pointer-events:none!important;
+  background:transparent!important;
+  filter:drop-shadow(0 5px 7px #0008)!important;
+}
+
+#teams .pokemon-card .pokemon-info,
+#teams .pokemon-card .mini{
+  position:relative!important;
+  z-index:3!important;
+}
