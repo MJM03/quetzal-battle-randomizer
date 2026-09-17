@@ -1,0 +1,33 @@
+/* V41 — no tocar la estructura de las tarjetas; solo animar el sprite */
+#teams .pokemon-card > img:first-child{
+  width:44px!important;
+  height:44px!important;
+  max-width:44px!important;
+  max-height:44px!important;
+  object-fit:contain!important;
+  display:block!important;
+  grid-column:auto!important;
+  grid-row:auto!important;
+}
+#teams .pokemon-card .pokemon-info{
+  min-width:0!important;
+  overflow:hidden!important;
+}
+#teams .pokemon-card .name{
+  display:block!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+#teams .pokemon-card .meta{
+  display:block!important;
+}
+@media(max-width:650px){
+  #teams .pokemon-card > img:first-child{
+    width:44px!important;
+    height:44px!important;
+    max-width:44px!important;
+    max-height:44px!important;
+  }
+}
