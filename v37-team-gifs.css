@@ -1,0 +1,5 @@
+/* V37 — overlay animado para las tarjetas de EQUIPOS SORTEADOS */
+.pokemon-card{position:relative;overflow:hidden}
+.pokemon-card>img.qbr37-gif{position:absolute!important;left:50%!important;top:50%!important;width:82px!important;height:82px!important;max-width:82px!important;max-height:82px!important;transform:translate(-50%,-58%)!important;object-fit:contain!important;z-index:3;pointer-events:none;visibility:visible!important}
+.pokemon-card>img:not(.qbr37-gif){visibility:hidden!important}
+@media(max-width:520px){.pokemon-card>img.qbr37-gif{width:68px!important;height:68px!important;max-width:68px!important;max-height:68px!important}}
