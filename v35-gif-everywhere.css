@@ -1,0 +1,4 @@
+/* V35 — Pokédex visible en tarjetas, oculto solo dentro de la ruleta */
+#teamSpriteLayer .dex-badge{display:none!important}
+/* Mantener los GIF de las tarjetas contenidos dentro de su espacio */
+.pokemon-card img,.featured-pokemon,.fighter-pokemon,.battle-arena .pokemon-sprite{object-fit:contain}
