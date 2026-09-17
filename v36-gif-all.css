@@ -1,0 +1,3 @@
+/* V36 — el GIF ocupa exactamente el espacio del sprite original */
+#teamSpriteLayer .team-sprite-wrap .team-sprite{object-fit:contain!important}
+.pokemon-card img,.featured-pokemon,.battle-arena img,.fighter-pokemon{object-fit:contain!important}
