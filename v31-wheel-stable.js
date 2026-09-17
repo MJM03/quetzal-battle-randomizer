@@ -1,4 +1,4 @@
-/* V31 — ruleta estable: elimina superposición y mantiene 3/6 según configuración */
+/* V34 — ruleta estable + datos del Pokémon para sprites animados */
 (function(){
   function boot(){
     const layer=document.getElementById('teamSpriteLayer'), sizeEl=document.getElementById('teamSize');
@@ -15,35 +15,22 @@
       }catch{}
       return [];
     }
+    function tag(){
+      const team=readTeam().slice(0,count());
+      [...layer.querySelectorAll('.team-sprite-wrap')].forEach((el,i)=>{const p=team[i];if(p){el.dataset.pokemonId=String(p.id);el.dataset.pokemonName=String(p.name||p.displayName||'').toLowerCase()}});
+    }
     function syncSaved(force=false){
       const team=readTeam().slice(0,count()).filter(p=>p&&Number.isInteger(p.id));
-      const key=JSON.stringify([count(),team.map(p=>p.id)]);
+      const key=JSON.stringify([count(),team.map(p=>p.id),team.map(p=>p.name||p.displayName||'')]);
       if(!force&&key===lastKey)return;
       lastKey=key;
-      if(team.length&&typeof window.renderTeamWheelPreview==='function'){
-        try{window.renderTeamWheelPreview(team.map(p=>p.id),true)}catch{}
-      }
-      [...layer.querySelectorAll('.team-sprite-wrap')].forEach((el,i)=>{
-        const p=team[i];
-        if(p){el.dataset.pokemonId=String(p.id);el.dataset.pokemonName=String(p.name||p.displayName||'');}
-        if(i>=count())el.remove();
-      });
-      trim();
+      if(team.length&&typeof window.renderTeamWheelPreview==='function')try{window.renderTeamWheelPreview(team.map(p=>p.id),true)}catch{}
+      tag();trim();
     }
-    function refresh(){lastKey='';syncSaved(true)}
-    const observer=new MutationObserver(()=>{
-      trim();
-      [...layer.querySelectorAll('.team-sprite-wrap')].forEach((el,i)=>{
-        if(!el.dataset.pokemonId){const p=readTeam()[i];if(p){el.dataset.pokemonId=String(p.id);el.dataset.pokemonName=String(p.name||p.displayName||'')}}
-      });
-    });
+    const observer=new MutationObserver(()=>{tag();trim()});
     observer.observe(layer,{childList:true,subtree:true});
-    sizeEl.addEventListener('change',refresh);
-    setInterval(()=>{
-      trim();
-      const rolling=document.querySelector('.forge-panel')?.classList.contains('rolling');
-      if(!rolling)syncSaved(false);
-    },120);
+    sizeEl.addEventListener('change',()=>{lastKey='';syncSaved(true)});
+    setInterval(()=>{trim();if(!document.querySelector('.forge-panel')?.classList.contains('rolling'))syncSaved(false)},120);
     syncSaved(true);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
