@@ -1,61 +1,28 @@
-/* V43 — tarjetas de Pokémon legibles + GIF animado */
+/* V44 — TARJETAS + BALANCE PRO
+   Balanceado PRO usa datos reales de base stats + tipos de PokéAPI.
+   Random total queda sin heurísticas de balance. */
 (function(){
   const BASE='https://play.pokemonshowdown.com/sprites/ani/';
-  function slug(raw){
-    let s=String(raw||'').toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-    s=s.replace(/♀/g,'-f').replace(/♂/g,'-m').replace(/[.'’]/g,'').replace(/\s+/g,'-');
-    s=s.replace(/^mega-(.+)-(x|y)$/,'$1-mega-$2').replace(/^mega-(.+)$/,'$1-mega').replace(/^primal-(.+)$/,'$1-primal');
-    return s;
-  }
-  function cleanOldCss(){
-    document.querySelectorAll('link[rel="stylesheet"]').forEach(link=>{
-      const h=link.getAttribute('href')||'';
-      if(/v38-team-card-gifs|v40-team-card-gifs|v41-team-card-fix/.test(h))link.remove();
-    });
-    document.querySelectorAll('#teams .pokemon-card .qbr-team-card-gif').forEach(n=>n.remove());
-    let style=document.getElementById('qbr-v43-card-style');
-    if(!style){
-      style=document.createElement('style');style.id='qbr-v43-card-style';document.head.appendChild(style);
-    }
-    style.textContent=`
-      #teams .pokemon-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
-      #teams .pokemon-card{position:relative!important;min-width:0!important;min-height:76px!important;display:grid!important;grid-template-columns:50px minmax(0,1fr)!important;gap:8px!important;align-items:center!important;padding:8px!important;overflow:hidden!important}
-      #teams .pokemon-card>img:first-child{grid-column:1!important;grid-row:1!important;width:50px!important;height:50px!important;max-width:50px!important;max-height:50px!important;object-fit:contain!important;display:block!important}
-      #teams .pokemon-card>.pokemon-info{grid-column:2!important;grid-row:1!important;min-width:0!important;width:100%!important;display:block!important;padding:0 34px 0 0!important;overflow:hidden!important}
-      #teams .pokemon-card .name{display:block!important;width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;font-size:.73rem!important;line-height:1.15!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-      #teams .pokemon-card .meta{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:4px!important;width:100%!important;margin-top:5px!important;font-size:.61rem!important;line-height:1.2!important;white-space:normal!important;overflow:visible!important}
-      #teams .pokemon-card .dex{display:inline-flex!important;align-items:center!important;white-space:nowrap!important}
-      #teams .pokemon-card .generation-badge{position:absolute!important;right:36px!important;top:8px!important;margin:0!important;padding:2px 5px!important;font-size:.46rem!important;line-height:1.1!important;white-space:nowrap!important;z-index:3!important}
-      #teams .pokemon-card>.mini{position:absolute!important;right:5px!important;top:5px!important;width:27px!important;height:27px!important;min-width:27px!important;padding:0!important;z-index:5!important}
-      @media(max-width:650px){
-        #teams .pokemon-grid{grid-template-columns:1fr!important;gap:8px!important}
-        #teams .pokemon-card{min-height:80px!important;grid-template-columns:58px minmax(0,1fr)!important;padding:9px!important;gap:9px!important}
-        #teams .pokemon-card>img:first-child{width:58px!important;height:58px!important;max-width:58px!important;max-height:58px!important}
-        #teams .pokemon-card>.pokemon-info{padding-right:44px!important}
-        #teams .pokemon-card .name{font-size:.82rem!important;line-height:1.2!important}
-        #teams .pokemon-card .meta{font-size:.65rem!important;margin-top:5px!important}
-        #teams .pokemon-card .generation-badge{right:40px!important;top:9px!important;font-size:.49rem!important}
-        #teams .pokemon-card>.mini{right:6px!important;top:6px!important;width:29px!important;height:29px!important;min-width:29px!important}
-      }
-    `;
-  }
-  function arm(img){
-    if(!(img instanceof HTMLImageElement))return;
-    const card=img.closest('#teams .pokemon-card');if(!card)return;
-    const name=slug(img.alt||card.querySelector('.name')?.textContent||'');if(!name)return;
-    const gif=BASE+name+'.gif';
-    if(img.dataset.qbrV43===gif)return;
-    const original=img.src;
-    img.dataset.qbrV43=gif;
-    img.onerror=function(){img.onerror=null;if(original)img.src=original};
-    img.src=gif;
-  }
-  function scan(){cleanOldCss();document.querySelectorAll('#teams .pokemon-card>img:first-child').forEach(arm)}
-  function boot(){
-    scan();
-    const teams=document.getElementById('teams');if(!teams)return;
-    new MutationObserver(()=>requestAnimationFrame(scan)).observe(teams,{childList:true,subtree:true});
-    setInterval(scan,1000);
-  }
+  const STATS_URL='https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/pokemon_stats.csv';
+  const TYPES_URL='https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/pokemon_types.csv';
+  const META_KEY='qbr-balance-pro-v1';
+  function slug(raw){let s=String(raw||'').toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'');s=s.replace(/♀/g,'-f').replace(/♂/g,'-m').replace(/[.'’]/g,'').replace(/\s+/g,'-');s=s.replace(/^mega-(.+)-(x|y)$/,'$1-mega-$2').replace(/^mega-(.+)$/,'$1-mega').replace(/^primal-(.+)$/,'$1-primal');return s;}
+  function cleanCardCss(){document.querySelectorAll('link[rel="stylesheet"]').forEach(link=>{const h=link.getAttribute('href')||'';if(/v38-team-card-gifs|v40-team-card-gifs|v41-team-card-fix/.test(h))link.remove()});document.querySelectorAll('#teams .pokemon-card .qbr-team-card-gif').forEach(n=>n.remove());if(document.getElementById('qbr-v44-card-style'))return;const style=document.createElement('style');style.id='qbr-v44-card-style';style.textContent=`#teams .pokemon-card{position:relative!important;min-width:0!important;display:grid!important;grid-template-columns:44px minmax(0,1fr)!important;gap:7px!important;align-items:center!important;overflow:hidden!important}#teams .pokemon-card>img:first-child{grid-column:1!important;grid-row:1!important;width:44px!important;height:44px!important;max-width:44px!important;max-height:44px!important;object-fit:contain!important;display:block!important;position:relative!important;z-index:2!important}#teams .pokemon-card>.pokemon-info{grid-column:2!important;grid-row:1!important;min-width:0!important;width:auto!important;display:block!important;position:relative!important;z-index:3!important;padding-right:20px!important}#teams .pokemon-card>.mini{position:absolute!important;right:4px!important;top:4px!important;width:24px!important;height:24px!important;z-index:5!important}#teams .pokemon-card .name{display:block!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;line-height:1.15!important;font-size:.73rem!important}#teams .pokemon-card .meta{display:block!important;white-space:normal!important;line-height:1.3!important;margin-top:3px!important}@media(max-width:430px){#teams .pokemon-grid{grid-template-columns:1fr!important}}`;document.head.appendChild(style)}
+  function armCard(img){if(!(img instanceof HTMLImageElement))return;const card=img.closest('#teams .pokemon-card');if(!card)return;const name=slug(img.alt||card.querySelector('.name')?.textContent||'');if(!name)return;const gif=BASE+name+'.gif';if(img.dataset.qbrV44===gif)return;const original=img.src;img.dataset.qbrV44=gif;img.onerror=function(){img.onerror=null;if(original)img.src=original};img.src=gif;}
+  function scanCards(){cleanCardCss();document.querySelectorAll('#teams .pokemon-card>img:first-child').forEach(armCard)}
+  let meta={},metaReady=false,originalMakeTeam=null;
+  function parseCSV(text){const rows=text.trim().split(/\r?\n/);if(!rows.length)return[];const head=rows.shift().split(',');return rows.map(line=>{const cols=line.split(','),o={};head.forEach((k,i)=>o[k]=cols[i]);return o})}
+  function rand(a){return a[Math.floor(Math.random()*a.length)]}
+  function isLegendary(id){return typeof legendaryIds!=='undefined'&&legendaryIds.has(Number(id))}
+  function buildMeta(statsText,typesText){const srows=parseCSV(statsText),trows=parseCSV(typesText),m={};srows.forEach(r=>{const id=Number(r.pokemon_id);if(!id||id>1025)return;if(!m[id])m[id]={stats:[0,0,0,0,0,0],types:[]};const si=Number(r.stat_id)-1;if(si>=0&&si<6)m[id].stats[si]=Number(r.base_stat)||0});trows.forEach(r=>{const id=Number(r.pokemon_id);if(!id||id>1025)return;if(!m[id])m[id]={stats:[0,0,0,0,0,0],types:[]};const t=Number(r.type_id);if(t&&!m[id].types.includes(t))m[id].types.push(t)});Object.keys(m).forEach(k=>{const x=m[k];x.bst=x.stats.reduce((a,b)=>a+b,0);x.off=Math.max(x.stats[1],x.stats[3]);x.speed=x.stats[5];x.bulk=x.stats[0]+x.stats[2]+x.stats[4];x.role=x.speed>=95?'speed':x.off>=105?'attacker':x.bulk>=250?'wall':'balanced'});return m}
+  async function loadBalanceMeta(){try{const cached=localStorage.getItem(META_KEY);if(cached){const parsed=JSON.parse(cached);if(parsed&&Object.keys(parsed).length>900){meta=parsed;metaReady=true;return true}}}catch{}try{const [a,b]=await Promise.all([fetch(STATS_URL),fetch(TYPES_URL)]);if(!a.ok||!b.ok)throw new Error('balance data');const [sa,ta]=await Promise.all([a.text(),b.text()]);meta=buildMeta(sa,ta);localStorage.setItem(META_KEY,JSON.stringify(meta));metaReady=true;return true}catch(e){console.warn('[QBR Balance PRO]',e);return false}}
+  function usedAcross(playerIndex){const used=new Set();try{const c=cfg();if(!c.unique)return used;(currentTeams||[]).forEach((team,ti)=>{if(ti!==playerIndex)(team||[]).forEach(p=>p&&used.add(Number(p.id)))})}catch{}return used}
+  function typeScore(types,seen){let n=0;(types||[]).forEach(t=>n+=seen.has(t)?-4:10);return n}
+  function roleScore(x,roles){let s=0;if(!roles.has('speed')&&x.speed>=95)s+=12;if(!roles.has('attacker')&&x.off>=105)s+=10;if(!roles.has('wall')&&x.bulk>=250)s+=10;if(!roles.has('balanced')&&x.role==='balanced')s+=5;return s}
+  const coverage={1:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],2:[1,5,6,7,8,9,13,14,15,16,17],3:[2,3,4,5,6,7,8,9,10,11,12,13,14,16,17],4:[10,11,12,15,17,18],5:[4,5,6,7,8,9,10,13,14,16,17,18],6:[1,2,4,5,7,8,9,10,11,12,13,14,15,16,17],7:[11,12,14,15,16,17,18],8:[8,14,15,16,17],9:[1,2,3,5,6,7,8,9,10,12,13,14,15,16,17],10:[7,12,13,15,16,18],11:[4,5,6,9,10,11,12,13,15,16],12:[5,6,7,10,11,12,13,15,16,17,18],13:[3,11,15,16,18],14:[2,4,7,8,9,10,11,12,13,14,15,16,17,18],15:[3,4,6,7,8,9,10,11,12,13,15,16,17,18],16:[2,4,7,8,10,11,12,14,15,17,18],17:[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],18:[2,4,6,7,8,9,11,12,13,14,15,16,17]};
+  function coverageScore(types,seen){const covered=new Set(seen),before=covered.size;(types||[]).forEach(t=>(coverage[t]||[]).forEach(x=>covered.add(x)));return (covered.size-before)*2}
+  function buildBalancedTeam(playerIndex){const c=cfg(),pool=poolFor(c),used=usedAcross(playerIndex),team=[],seenTypes=new Set(),roles=new Set();if(!metaReady)return originalMakeTeam(playerIndex);const candidates=pool.filter(p=>!c.unique||!used.has(Number(p.id))).filter(p=>meta[p.id]);if(candidates.length<c.teamSize)return originalMakeTeam(playerIndex);let totalBst=0;for(let slot=0;slot<c.teamSize;slot++){const remaining=candidates.filter(p=>!team.some(x=>x.id===p.id));const sample=remaining.length>180?Array.from({length:180},()=>rand(remaining)).filter((p,i,a)=>a.findIndex(x=>x.id===p.id)===i):remaining;let best=null,bestScore=-Infinity;sample.forEach(p=>{const x=meta[p.id],avg=(totalBst+x.bst)/(slot+1);let s=-Math.abs(avg-500)*0.42;s+=typeScore(x.types,seenTypes)+coverageScore(x.types,seenTypes)+roleScore(x,roles);if(isLegendary(p.id))s-=8;if(typeof strong!=='undefined'&&strong.has(p.id))s+=3;s+=Math.random()*10;if(s>bestScore){bestScore=s;best=p}});if(!best)break;team.push(best);totalBst+=meta[best.id].bst;meta[best.id].types.forEach(t=>seenTypes.add(t));roles.add(meta[best.id].role);used.add(best.id)}return team.length===c.teamSize?team:originalMakeTeam(playerIndex)}
+  function installBalance(){if(typeof window.makeTeamForPlayer==='function')originalMakeTeam=window.makeTeamForPlayer;if(!originalMakeTeam)return;window.makeTeamForPlayer=function(playerIndex){return cfg().mode==='chaos'?originalMakeTeam(playerIndex):buildBalancedTeam(playerIndex)};window.QBRBalancePro={ready:()=>metaReady,rebuild:loadBalanceMeta,clearCache:()=>localStorage.removeItem(META_KEY)}}
+  function boot(){scanCards();const teams=document.getElementById('teams');if(teams)new MutationObserver(()=>requestAnimationFrame(scanCards)).observe(teams,{childList:true,subtree:true});setInterval(scanCards,1200);installBalance();loadBalanceMeta().then(ok=>console.log(ok?'[QBR] Balanceado PRO listo':'[QBR] Balanceado PRO fallback'))}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
