@@ -29,3 +29,22 @@
 
 /* V3 roulette */
 .tournament-draw{position:relative;width:180px;height:180px;margin:0 auto 8px}.tournament-wheel{width:180px;height:180px;border-radius:50%;background:conic-gradient(#ef414b 0 25%,#3178ff 25% 50%,#2fbe67 50% 75%,#b84cff 75% 100%);border:8px solid #d8b666;box-shadow:0 0 0 4px #111a22,0 12px 28px #000b;transition:transform 2.4s cubic-bezier(.12,.76,.08,1);display:grid;place-items:center}.tournament-wheel-center{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;background:#07131e;border:4px solid #d8b666;color:#ffd65d;font-size:1.3rem;box-shadow:0 0 20px #000}.tournament-wheel-center small{font-size:.48rem;letter-spacing:.12em;color:#9fb5bf}.tournament-wheel-pointer{position:absolute;z-index:3;left:50%;top:-12px;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:26px solid #ffd748;filter:drop-shadow(0 4px 3px #0008)}.tournament-empty p{margin:8px 0 0;color:#8faebb}.waiting{opacity:.65}
+/* V4 — polished tournament roulette */
+.tournament-panel{background:linear-gradient(180deg,#0a1b29ee,#06121d);border-color:#28596d}
+.tournament-empty-icon{font-size:2rem;margin-bottom:4px}.tournament-empty strong{display:block;color:#63efff;letter-spacing:.15em}.tournament-empty p{margin:7px 0 0}
+.tournament-draw-wrap{grid-column:1/-1;display:grid;place-items:center;min-height:300px}
+.tournament-draw{position:relative;width:240px;height:270px;display:grid;place-items:center}
+.tournament-wheel{position:relative;width:210px;height:210px;border-radius:50%;background:conic-gradient(from -45deg,#ff4b59 0 25%,#3190ff 25% 50%,#35d878 50% 75%,#b74dff 75% 100%);border:9px solid #d8b666;box-shadow:0 0 0 4px #07131d,0 0 0 7px #4ceaff44,0 18px 35px #000b,inset 0 0 35px #0008;transform:rotate(0deg);will-change:transform}
+.tournament-wheel.is-spinning{animation:tournamentWheelSpin 3.2s cubic-bezier(.12,.78,.08,1) forwards}
+@keyframes tournamentWheelSpin{from{transform:rotate(0deg)}to{transform:rotate(var(--tournament-rotation))}}
+.tournament-wheel-pointer{position:absolute;z-index:5;top:13px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:17px solid transparent;border-right:17px solid transparent;border-top:0;border-bottom:34px solid #ffd84e;filter:drop-shadow(0 6px 4px #000b)}
+.tournament-wheel-pointer:after{content:"";position:absolute;left:-8px;top:28px;width:16px;height:8px;border-radius:8px;background:#fff2a0;box-shadow:0 0 15px #ffe56b}
+.tournament-wheel-center{position:absolute;inset:34%;border-radius:50%;display:grid;place-items:center;align-content:center;gap:2px;background:radial-gradient(circle at 35% 28%,#254459,#06131e 68%);border:5px solid #e0bd65;box-shadow:0 0 0 4px #07131d,0 0 24px #000b;color:#ffd85c;z-index:2}
+.tournament-wheel-center span{font-size:1.25rem}.tournament-wheel-center small{font-size:.46rem;font-weight:900;letter-spacing:.14em;color:#d7eaf0}
+.tournament-wheel-slice-labels{position:absolute;inset:0;z-index:1;font-weight:950;color:#fff;text-shadow:0 2px 5px #000b;font-size:.72rem}.tournament-wheel-slice-labels span{position:absolute}.tournament-wheel-slice-labels span:nth-child(1){top:25px;left:54px}.tournament-wheel-slice-labels span:nth-child(2){top:54px;right:28px}.tournament-wheel-slice-labels span:nth-child(3){bottom:25px;right:54px}.tournament-wheel-slice-labels span:nth-child(4){bottom:54px;left:28px}
+.tournament-draw-caption{position:absolute;bottom:0;left:50%;transform:translateX(-50%);white-space:nowrap;color:#8eefff;font-size:.67rem;font-weight:900;letter-spacing:.12em;animation:tournamentPulse .8s ease-in-out infinite alternate}@keyframes tournamentPulse{to{opacity:.45;transform:translateX(-50%) scale(.98)}}
+.tournament-actions{gap:9px}.tournament-btn{font-size:.74rem;letter-spacing:.04em;transition:.18s}.tournament-btn:hover{transform:translateY(-1px);border-color:#5defff;box-shadow:0 0 16px #3ceaff22}
+.tournament-match.current{animation:tournamentCurrent 1.5s ease-in-out infinite alternate}@keyframes tournamentCurrent{to{box-shadow:0 0 24px #ffd45a33,0 10px 25px #0006}}
+.tournament-player button{font-weight:900;letter-spacing:.04em}
+.tournament-champion{position:relative;overflow:hidden}.champion-trophy{font-size:2rem;margin-bottom:4px}.tournament-champion strong{display:block}
+@media(max-width:760px){.tournament-draw-wrap{min-height:280px}.tournament-wheel{width:190px;height:190px}.tournament-draw{transform:scale(.94)}}
