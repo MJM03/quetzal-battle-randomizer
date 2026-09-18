@@ -1,6 +1,6 @@
 /* V2 — Modo Torneo con ruleta */
 (function(){
-  const KEY='qbr-tournament-v2';
+  const KEY='qbr-tournament-v3';
   const panel=document.getElementById('tournamentPanel'); if(!panel)return;
   const bracketEl=document.getElementById('tournamentBracket'),statusEl=document.getElementById('tournamentStatus');
   const startBtn=document.getElementById('tournamentStart'),resetBtn=document.getElementById('tournamentReset');
