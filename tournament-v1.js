@@ -11,7 +11,7 @@
 
   function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch{return null}}
   function save(){localStorage.setItem(KEY,JSON.stringify(state))}
-  function names(){const n=window.playerNames||[];const count=Number(document.getElementById('players')?.value||4);return Array.from({length:count},(_,i)=>(n[i]||'').trim()||'Jugador '+(i+1))}
+  function names(){let n=[];try{n=JSON.parse(localStorage.getItem('qbr-player-names-v1')||'[]')}catch{}const count=Number(document.getElementById('players')?.value||4);return Array.from({length:count},(_,i)=>(n[i]||'').trim()||'Jugador '+(i+1))}
   function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
   function makeMatch(a,b){return {a,b,winner:null}}
   function start(){
