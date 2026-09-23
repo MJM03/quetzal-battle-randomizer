@@ -18,6 +18,7 @@
   function currentIds(){return snapshot().flat()}
   function markVarietyStatus(){const status=document.querySelector('#status');if(!status)return;const base=status.textContent||'Pokédex lista';if(!/🎲/.test(base))status.textContent=`${base} · 🎲 ${history.length} descartados`}
   async function resolveRepeatedSlots(){
+    if(document.querySelector('#mode')?.value==='monotype'){previous=snapshot();localStorage.setItem(SNAP_KEY,JSON.stringify(previous));return}
     if(busy)return;
     const now=teams();if(!now.length)return;
     const changed=[];
