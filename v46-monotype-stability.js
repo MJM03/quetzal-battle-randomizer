@@ -51,6 +51,24 @@
     const a=assignments();document.querySelectorAll('#teams .team-card').forEach((card,i)=>{if(card.querySelector('.mono-badge'))return;const h=card.querySelector('.team-head');if(h&&a[i]){const b=document.createElement('span');b.className='mono-badge';b.textContent='◆ '+TYPES[a[i]-1];h.appendChild(b)}})
   }
   function boot(){install();harden();load().then(()=>{if(cfgNow().mode==='monotype')localStorage.removeItem(ASSIGN)});const teams=document.getElementById('teams');if(teams)new MutationObserver(()=>requestAnimationFrame(badges)).observe(teams,{childList:true,subtree:true});setInterval(badges,1000)}
-  window.QBRMonotype={ready:()=>ready,load,validate:(team,pi)=>{const t=assignments()[pi];return !!t&&(team||[]).every(p=>meta[p.id]?.types.includes(t))},typeFor:pi=>TYPES[(assignments()[pi]||1)-1]};
+  function rerollSlot(ti,pi){
+    if(!ready)return;
+    const c=cfgNow(),type=assignments()[ti],u=used(ti),team=currentTeams[ti]||[];
+    team.forEach((p,i)=>{if(i!==pi&&p)u.add(+p.id)});
+    const old=team[pi]?.id;
+    let candidates=pool().filter(p=>p.id!==old&&meta[p.id]?.types.includes(type)&&(!c.unique||!u.has(+p.id)));
+    if(!candidates.length)return;
+    candidates.sort((a,b)=>Math.abs(meta[a.id].bst-500)-Math.abs(meta[b.id].bst-500)+(Math.random()-.5)*30);
+    const band=candidates.slice(0,Math.min(24,candidates.length)),p=band[Math.floor(Math.random()*band.length)];
+    currentTeams[ti][pi]=p;localStorage.setItem('qbr-teams-v7',JSON.stringify(currentTeams));renderTeams();renderVersus();
+  }
+  document.getElementById('teams')?.addEventListener('click',e=>{
+    if(cfgNow().mode!=='monotype')return;
+    const btn=e.target.closest('.reroll-one');if(!btn)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    const cards=[...document.querySelectorAll('#teams .team-card')],card=btn.closest('.team-card'),ti=cards.indexOf(card),pi=[...card.querySelectorAll('.reroll-one')].indexOf(btn);
+    if(ti>=0&&pi>=0)rerollSlot(ti,pi);
+  },true);
+  window.QBRMonotype={ready:()=>ready,load,validate:(team,pi)=>{const t=assignments()[pi];return !!t&&(team||[]).every(p=>meta[p.id]?.types.includes(t))},typeFor:pi=>TYPES[(assignments()[pi]||1)-1],rerollSlot};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
