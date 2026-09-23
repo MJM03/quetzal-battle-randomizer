@@ -36,7 +36,51 @@ function randomPreviewIds(){const pool=poolFor(cfg());if(pool.length<8)return fa
 function renderTeamWheelPreview(ids=fallbackPreviewIds,showDex=false){teamSpriteLayer.innerHTML='';ids.slice(0,8).forEach((id,i)=>{const angle=(-90+i*(360/Math.min(ids.length,8)))*Math.PI/180;const wrap=document.createElement('div');wrap.className='team-sprite-wrap';wrap.style.left=`${50+Math.cos(angle)*31}%`;wrap.style.top=`${50+Math.sin(angle)*31}%`;const img=document.createElement('img');img.className='team-sprite';img.src=spriteUrl(id);img.alt='';wrap.appendChild(img);if(showDex){const badge=document.createElement('span');badge.className='dex-badge';badge.textContent=dex(id);wrap.appendChild(badge)}teamSpriteLayer.appendChild(wrap)})}
 function resetDraft(clearTeams=true){draftIndex=0;localStorage.setItem(DRAFT_KEY,'0');if(clearTeams){currentTeams=[];localStorage.removeItem(TEAMS_KEY);teamsEl.innerHTML=''}renderTeamWheelPreview(pokemon.length?randomPreviewIds():fallbackPreviewIds);renderDraftState();renderTeamChips();renderVersus()}
 function renderDraftState(){const count=+$('#players').value;if(draftIndex>count)draftIndex=count;draftProgress.innerHTML='';const label=document.createElement('div');label.className='draft-label';label.textContent=draftIndex>=count?`Ronda completa · ${count}/${count}`:`Turno de ${displayName(draftIndex)} · ${draftIndex+1}/${count}`;draftProgress.appendChild(label);for(let i=0;i<count;i++){const d=document.createElement('span');d.className='draft-dot'+(i<draftIndex?' done':i===draftIndex?' active':'');draftProgress.appendChild(d)}if(draftIndex>=count){teamSpinBtn.innerHTML='<strong>NUEVA</strong><small>RONDA</small>';teamWheelCaption.textContent='TODOS LOS EQUIPOS LISTOS';selectedPlayerBanner.hidden=false;selectedPlayerBanner.textContent='✓ Sorteo completo'}else{teamSpinBtn.innerHTML=`<strong>J${draftIndex+1}</strong><small>GIRAR</small>`;teamWheelCaption.textContent=`SORTEAR EQUIPO · ${displayName(draftIndex)}`;selectedPlayerBanner.hidden=true}}
-async function spinCurrentPlayer(){if(teamRolling)return;if(!pokemon.length)await loadPokemon();const c=cfg();if(c.unique&&poolFor(c).length<c.players*c.teamSize){statusEl.textContent='No hay suficientes especies con esos filtros.';return}if(draftIndex>=c.players){resetDraft(true);return}const player=draftIndex;teamRolling=true;saveSettings();ensureAudio();const panel=$('.forge-panel');panel.classList.add('rolling');panel.classList.remove('player-reveal');teamSpinBtn.disabled=true;selectedPlayerBanner.hidden=true;teamWheelCaption.textContent=`RANDOMIZANDO · ${displayName(player)}`;teamRollStatus.textContent=`Buscando ${c.teamSize} Pokémon para ${displayName(player)}…`;renderTeamChips(player);renderTeamWheelPreview(randomPreviewIds());const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;teamRotation+=1800+Math.floor(Math.random()*1080);teamWheel.style.transform=`rotateZ(${teamRotation}deg)`;let step=0;const interval=reduced?null:setInterval(()=>{renderTeamWheelPreview(randomPreviewIds());tone(700+(step%4)*90,.024,.014);step++},170);setTimeout(()=>{if(interval)clearInterval(interval);const team=makeTeamForPlayer(player);currentTeams[player]=team;localStorage.setItem(TEAMS_KEY,JSON.stringify(currentTeams));renderTeamWheelPreview(team.map(p=>p.id),true);selectedPlayerBanner.hidden=false;selectedPlayerBanner.textContent=`J${player+1} · ${displayName(player)} · EQUIPO LISTO`;panel.classList.remove('rolling');panel.classList.add('player-reveal');renderTeams(true);draftIndex=player+1;localStorage.setItem(DRAFT_KEY,String(draftIndex));renderTeamChips();renderDraftState();teamRollStatus.textContent=draftIndex>=c.players?'Todos los jugadores tienen equipo.':'Equipo guardado abajo · Pulsa el centro para el siguiente jugador.';statusEl.textContent=`${displayName(player)} listo · ${team.map(p=>dex(p.id)).join(' · ')}`;teamSpinBtn.disabled=false;teamRolling=false;successSound();renderVersus();setTimeout(()=>panel.classList.remove('player-reveal'),900)},reduced?80:3100)}
+async function spinCurrentPlayer(){
+  if(teamRolling)return;
+  let interval=null,finishTimer=null;
+  const release=()=>{if(interval){clearInterval(interval);interval=null}if(finishTimer){clearTimeout(finishTimer);finishTimer=null}teamRolling=false;teamSpinBtn.disabled=false;$('.forge-panel')?.classList.remove('rolling')};
+  try{
+    if(!pokemon.length)await loadPokemon();
+    const c=cfg();
+    if(c.mode==='monotype'&&window.QBRMonotype&&!QBRMonotype.ready()){
+      teamSpinBtn.disabled=true;teamRollStatus.textContent='Preparando datos de tipos…';statusEl.textContent='Preparando modo Monotipo…';
+      await Promise.race([QBRMonotype.load(),new Promise((_,rej)=>setTimeout(()=>rej(new Error('MONOTYPE_LOAD_TIMEOUT')),8000))]);
+      teamSpinBtn.disabled=false;
+      if(!QBRMonotype.ready())throw new Error('MONOTYPE_NOT_READY');
+    }
+    if(c.unique&&poolFor(c).length<c.players*c.teamSize){statusEl.textContent='No hay suficientes especies con esos filtros.';return}
+    if(draftIndex>=c.players){resetDraft(true);return}
+    const player=draftIndex;teamRolling=true;saveSettings();ensureAudio();
+    const panel=$('.forge-panel');panel.classList.add('rolling');panel.classList.remove('player-reveal');teamSpinBtn.disabled=true;selectedPlayerBanner.hidden=true;
+    teamWheelCaption.textContent=`RANDOMIZANDO · ${displayName(player)}`;teamRollStatus.textContent=`Buscando ${c.teamSize} Pokémon para ${displayName(player)}…`;renderTeamChips(player);renderTeamWheelPreview(randomPreviewIds());
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;teamRotation+=1800+Math.floor(Math.random()*1080);teamWheel.style.transform=`rotateZ(${teamRotation}deg)`;
+    let step=0;if(!reduced)interval=setInterval(()=>{try{renderTeamWheelPreview(randomPreviewIds());tone(700+(step%4)*90,.024,.014);step++}catch{}},170);
+    finishTimer=setTimeout(()=>{
+      try{
+        if(interval){clearInterval(interval);interval=null}
+        const team=makeTeamForPlayer(player);
+        if(!Array.isArray(team)||team.length!==c.teamSize||team.some(p=>!p))throw new Error('INVALID_TEAM');
+        if(c.mode==='monotype'&&window.QBRMonotype&&!QBRMonotype.validate(team,player))throw new Error('INVALID_MONOTYPE_TEAM');
+        currentTeams[player]=team;localStorage.setItem(TEAMS_KEY,JSON.stringify(currentTeams));renderTeamWheelPreview(team.map(p=>p.id),true);
+        selectedPlayerBanner.hidden=false;selectedPlayerBanner.textContent=`J${player+1} · ${displayName(player)} · EQUIPO LISTO`;
+        panel.classList.remove('rolling');panel.classList.add('player-reveal');renderTeams(true);
+        draftIndex=player+1;localStorage.setItem(DRAFT_KEY,String(draftIndex));renderTeamChips();renderDraftState();
+        teamRollStatus.textContent=draftIndex>=c.players?'Todos los jugadores tienen equipo.':'Equipo guardado abajo · Pulsa el centro para el siguiente jugador.';
+        statusEl.textContent=`${displayName(player)} listo · ${team.map(p=>dex(p.id)).join(' · ')}`;
+        teamSpinBtn.disabled=false;teamRolling=false;successSound();renderVersus();setTimeout(()=>panel.classList.remove('player-reveal'),900)
+      }catch(err){
+        console.error('[QBR spin]',err);release();
+        teamRollStatus.textContent='No se pudo completar el sorteo. Pulsa GIRAR para reintentar.';
+        statusEl.textContent=String(err?.message||'Error de sorteo').includes('MONOTYPE')?'Modo Monotipo aún no está listo. Intenta nuevamente.':'Sorteo recuperado · puedes volver a girar.';
+      }
+    },reduced?80:3100);
+  }catch(err){
+    console.error('[QBR spin init]',err);release();
+    teamRollStatus.textContent='No se pudo iniciar el sorteo. Pulsa GIRAR para reintentar.';
+    statusEl.textContent='Sorteo desbloqueado · intenta nuevamente.';
+  }
+}
 function rerollOne(ti,pi){if(!pokemon.length)return;const c=cfg(),pool=poolFor(c),used=usedAcrossTeams(ti);(currentTeams[ti]||[]).forEach((p,i)=>{if(i!==pi&&p)used.add(p.id)});currentTeams[ti][pi]=pick(pool,used,c);localStorage.setItem(TEAMS_KEY,JSON.stringify(currentTeams));renderTeams();renderVersus()}
 function rerollTeam(ti){if(!pokemon.length)return;currentTeams[ti]=makeTeamForPlayer(ti);localStorage.setItem(TEAMS_KEY,JSON.stringify(currentTeams));renderTeams(true);renderVersus()}
 function renderTeams(reveal=false){teamsEl.innerHTML='';const c=cfg();currentTeams.slice(0,c.players).forEach((team,ti)=>{if(!team)return;const node=$('#teamTemplate').content.cloneNode(true);const card=node.querySelector('.team-card');if(reveal)card.style.animationDelay=`${ti*90}ms`;if(ti===draftIndex)card.classList.add('is-current');node.querySelector('h2').textContent=`J${ti+1} · ${displayName(ti)}`;node.querySelector('.reroll-team').onclick=()=>rerollTeam(ti);const grid=node.querySelector('.pokemon-grid');team.forEach((p,pi)=>{if(!p)return;const pc=$('#pokemonTemplate').content.cloneNode(true),img=pc.querySelector('img');img.src=spriteUrl(p.id);img.alt=p.name;pc.querySelector('.name').textContent=p.name.replaceAll('-',' ');pc.querySelector('.meta').innerHTML=`<span class="dex">${dex(p.id)}</span><span>Nv. ${c.level}${c.perfectIv?' · IV31':''}</span>`;pc.querySelector('.reroll-one').onclick=()=>rerollOne(ti,pi);grid.appendChild(pc)});teamsEl.appendChild(node)})}
